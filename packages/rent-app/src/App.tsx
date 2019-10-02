@@ -1,12 +1,30 @@
 import React, { Component } from 'react';
-import './App.scss';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { theme } from './ThemeCss';
+import { reset } from './reset';
+
+import Header from './Header/Header';
+import Routes from './Routes/Routes';
+
+const GlobalStyle = createGlobalStyle`
+    ${reset}
+    
+    body {
+      font-family: ${props => props.theme.fonts.fontFamily};
+    }
+`;
 
 class App extends Component {
     render() {
         return (
-            <div className="App">
-                <h1> Hello, World! </h1>
-            </div>
+            <ThemeProvider theme={theme}>
+                <GlobalStyle />
+                <Router>
+                    <Header />
+                    <Routes />
+                </Router>
+            </ThemeProvider>
         );
     }
 }

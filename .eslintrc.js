@@ -24,6 +24,7 @@ module.exports = {
         'no-console': ['warn'],
         'prettier/prettier': 'error',
         'no-var-requires': 0,
+        '@typescript-eslint/explicit-function-return-type': 'off',
     },
     env: {
         node: true,
