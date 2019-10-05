@@ -1,8 +1,8 @@
 module.exports = {
-    roots : ['<rootDir>/packages'],
+    roots: ['<rootDir>/packages'],
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     moduleFileExtensions: ['ts', 'tsx', 'js'],
-    setupTestFrameworkScriptFile: '<rootDir>jest/setupTests.ts'
+    setupTestFrameworkScriptFile: '<rootDir>jest/setupTests.ts',
 };
