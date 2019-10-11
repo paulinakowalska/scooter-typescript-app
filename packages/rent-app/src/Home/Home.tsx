@@ -1,9 +1,11 @@
 import React from 'react';
-import Calendar from '../Calendar/Calendar';
+import DatePicker from '../DatePicker/DatePicker';
+import BigCalendar from '../Calendar/Calendar';
 
 const Home: React.FunctionComponent = () => (
     <div>
-        <Calendar />
+        <DatePicker handleDateChange={console.log} />
+        <BigCalendar />
     </div>
 );
 

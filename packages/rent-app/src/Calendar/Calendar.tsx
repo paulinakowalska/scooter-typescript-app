@@ -1,28 +1,58 @@
-import 'date-fns';
 import React from 'react';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import '!style-loader!css-loader!react-big-calendar/lib/css/react-big-calendar.css';
+import styled from 'styled-components';
 
-export default function MaterialUIPickers() {
-    const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date());
+const CalendarContainer = styled.div`
+    height: 500px;
+    margin: 50px;
+`;
 
-    const handleDateChange = (date: Date | null) => {
-        setSelectedDate(date);
-    };
-
-    return (
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-                margin="normal"
-                id="date-picker-dialog"
-                label="Date picker dialog"
-                format="MM/dd/yyyy"
-                value={selectedDate}
-                onChange={handleDateChange}
-                KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                }}
-            />
-        </MuiPickersUtilsProvider>
-    );
+interface CalendarProps {
+    events?: Array<object> | Array<void>;
+    defaultDate?: Date | number;
+    localizer?: void;
 }
+
+const eventsList = [
+    {
+        id: 0,
+        title: 'All Day Event very long title',
+        allDay: true,
+        start: new Date(2019, 9, 1),
+        end: new Date(2019, 9, 2),
+    },
+    {
+        id: 1,
+        title: 'Long Event',
+        start: new Date(2019, 9, 7),
+        end: new Date(2019, 9, 10),
+    },
+    {
+        id: 2,
+        title: 'Right now Time Event',
+        start: new Date(),
+        end: new Date(),
+    },
+];
+
+const BigCalendar = ({
+    events = eventsList,
+    defaultDate = moment().toDate(),
+    localizer = momentLocalizer(moment),
+}: CalendarProps) => {
+    return (
+        <CalendarContainer>
+            <Calendar
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                defaultDate={defaultDate}
+                localizer={localizer}
+            />
+        </CalendarContainer>
+    );
+};
+
+export default BigCalendar;
