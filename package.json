@@ -4,13 +4,15 @@
   "description": "tech jump project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:generate-output": "jest --json --outputFile=.jest-test-results.json",
     "lint:ts": "eslint 'packages/**/*.ts{,x}'",
     "lint:css": "stylelint 'packages/**/*.ts{,x}'",
     "lint": "run-p -c lint:*",
     "fix": "run-p -c 'lint:* -- --fix'",
     "lerna": "lerna",
     "storybook": "start-storybook -p 6006",
+    "prebuild:storybook": "npm run test:generate-output",
     "build-storybook": "build-storybook"
   },
   "author": "Paulina Kowalska",

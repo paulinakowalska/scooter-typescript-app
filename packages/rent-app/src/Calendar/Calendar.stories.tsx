@@ -6,6 +6,7 @@ import Calendar from './Calendar';
 import { date, number, text } from '@storybook/addon-knobs';
 
 storiesOf('Calendar', module)
+    .addParameters({ jest: ['Calendar'] })
     .add('Static calendar', () => {
         const eventsList = [
             {
@@ -32,15 +33,15 @@ storiesOf('Calendar', module)
         return <Calendar events={eventsList} defaultDate={moment().toDate()} localizer={momentLocalizer(moment)} />;
     })
     .add('Dynamic calendar', () => {
-        const numberOfEvents = number('Amount of events', 0);
+        const numberOfEvents = number('Amount of events', 0, {}, 'settings');
         const event = '';
         const arr = Array(numberOfEvents).fill(event);
 
         const knobsList = arr.map((a, i) => (
             <div key={i}>
-                {text(`${i + 1} Event title`, 'Title')}
-                {date(`${i + 1} Event start date`, new Date())}
-                {date(`${i + 1} Event end date`, new Date())}
+                {text(`Event title`, 'Title', `event-${i + 1}`)}
+                {date(`Event start date`, new Date(), `event-${i + 1}`)}
+                {date(`Event end date`, new Date(), `event-${i + 1}`)}
             </div>
         ));
 
