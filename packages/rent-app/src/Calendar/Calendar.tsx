@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import '!style-loader!css-loader!react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ const CalendarContainer = styled.div`
 
 interface CalendarProps {
     events?: Array<object> | Array<void>;
+    /** default new Date.now() */
     defaultDate?: Date | number;
     localizer?: void;
 }
@@ -36,15 +37,15 @@ const eventsList = [
         end: new Date(),
     },
 ];
-
-const BigCalendar = ({
+/** Calendar custom component wrapper */
+const Calendar = ({
     events = eventsList,
     defaultDate = moment().toDate(),
     localizer = momentLocalizer(moment),
 }: CalendarProps) => {
     return (
         <CalendarContainer>
-            <Calendar
+            <BigCalendar
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
@@ -55,4 +56,4 @@ const BigCalendar = ({
     );
 };
 
-export default BigCalendar;
+export { Calendar };
