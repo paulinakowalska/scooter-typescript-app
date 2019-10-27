@@ -3,18 +3,42 @@ import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import '!style-loader!css-loader!react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
-
+import EventModal from '../EventModal/EventModal';
 const CalendarContainer = styled.div`
     height: 500px;
     margin: 50px;
 `;
 
+type ValueType = {
+    id: number;
+    name: string;
+};
+
 interface CalendarProps {
     events?: Array<object> | Array<void>;
     /** default new Date.now() */
     defaultDate?: Date | number;
-    localizer?: void;
+    localizer?: Object;
 }
+
+const scooterList = [
+    {
+        id: 1,
+        name: 'Scooter  #1',
+    },
+    {
+        id: 2,
+        name: 'Scooter  #2',
+    },
+    {
+        id: 3,
+        name: 'Scooter  #3',
+    },
+    {
+        id: 4,
+        name: 'Scooter  #4',
+    },
+];
 
 const eventsList = [
     {
@@ -43,6 +67,45 @@ const Calendar = ({
     defaultDate = moment().toDate(),
     localizer = momentLocalizer(moment),
 }: CalendarProps) => {
+    const [open, setOpen] = React.useState(false);
+    const [startDate, setStartDate] = React.useState(defaultDate);
+    const [endDate, setEndDate] = React.useState(defaultDate);
+    const [selectedValue, setSelectedValue] = React.useState(scooterList[0]);
+
+    const handleSelectSlot = (slotInfo: { start: Date }) => {
+        const { start } = slotInfo;
+
+        setStartDate(moment(start).toDate());
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleChangeStartDate = (date: Date) => {
+        setStartDate(moment(date).toDate());
+    };
+    const handleChangeEndDate = (date: Date) => {
+        setEndDate(moment(date).toDate());
+    };
+
+    const handleAddEvent = () => {
+        eventsList.push({
+            id: eventsList.length + 1,
+            title: `${selectedValue.name} - User Name`,
+            allDay: true,
+            start: new Date(startDate),
+            end: new Date(endDate),
+        });
+    };
+
+    const handleChangeSelection = (event: React.ChangeEvent<{ name?: string; value: ValueType }>) => {
+        const { value } = event.target;
+
+        setSelectedValue(value);
+    };
+
     return (
         <CalendarContainer>
             <BigCalendar
@@ -51,6 +114,20 @@ const Calendar = ({
                 endAccessor="end"
                 defaultDate={defaultDate}
                 localizer={localizer}
+                selectable
+                onSelectSlot={handleSelectSlot}
+            />
+            <EventModal
+                open={open}
+                onClose={handleClose}
+                startDate={startDate}
+                endDate={endDate}
+                onChangeStartDate={handleChangeStartDate}
+                onChangeEndDate={handleChangeEndDate}
+                selectedValue={selectedValue}
+                onChangeSelection={handleChangeSelection}
+                scooterList={scooterList}
+                onAddEvent={handleAddEvent}
             />
         </CalendarContainer>
     );
