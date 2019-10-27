@@ -1,7 +1,7 @@
 export const theme = {
     width: '1200px',
     colors: {
-        white: '#ff',
+        white: '#fff',
         lightPink: '#ffdfdf',
         mediumPink: '#fbc1bc',
         mediumBlue: '#315b96',

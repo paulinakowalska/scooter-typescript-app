@@ -9,11 +9,6 @@ const CalendarContainer = styled.div`
     margin: 50px;
 `;
 
-type ValueType = {
-    id: number;
-    name: string;
-};
-
 interface CalendarProps {
     events?: Array<object> | Array<void>;
     /** default new Date.now() */
@@ -21,24 +16,7 @@ interface CalendarProps {
     localizer?: object;
 }
 
-const scooterList = [
-    {
-        id: 1,
-        name: 'Scooter  #1',
-    },
-    {
-        id: 2,
-        name: 'Scooter  #2',
-    },
-    {
-        id: 3,
-        name: 'Scooter  #3',
-    },
-    {
-        id: 4,
-        name: 'Scooter  #4',
-    },
-];
+const scooterList = ['Scooter  #1', 'Scooter  #2', 'Scooter  #3', 'Scooter  #4'];
 
 const eventsList = [
     {
@@ -93,14 +71,14 @@ const Calendar = ({
     const handleAddEvent = () => {
         eventsList.push({
             id: eventsList.length + 1,
-            title: `${selectedValue.name} - User Name`,
+            title: `${selectedValue} - User Name`,
             allDay: true,
             start: new Date(startDate),
             end: new Date(endDate),
         });
     };
 
-    const handleChangeSelection = (event: React.ChangeEvent<{ name?: string; value: ValueType }>) => {
+    const handleChangeSelection = (event: React.ChangeEvent<{ name?: string; value: string }>) => {
         const { value } = event.target;
 
         setSelectedValue(value);
@@ -120,8 +98,8 @@ const Calendar = ({
             <EventModal
                 open={open}
                 onClose={handleClose}
-                startDate={startDate}
-                endDate={endDate}
+                startDate={new Date(startDate)}
+                endDate={new Date(endDate)}
                 onChangeStartDate={handleChangeStartDate}
                 onChangeEndDate={handleChangeEndDate}
                 selectedValue={selectedValue}

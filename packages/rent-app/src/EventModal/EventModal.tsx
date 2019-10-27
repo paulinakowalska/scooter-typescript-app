@@ -8,7 +8,7 @@ import SelectAvailableItem from '../SelectAvailableItem/SelectAvailableItem';
 const EventModalContainer = styled.div`
     position: absolute;
     width: 400px;
-    background-color: ${props => props.theme.colors.lightPink};
+    background-color: ${props => props.theme.colors.white};
     border: 3px, solid, ${props => props.theme.colors.darkBlue};
     padding: ${props => props.theme.space.small};
 
@@ -17,11 +17,6 @@ const EventModalContainer = styled.div`
     transform: translate(-50%, -50%);
 `;
 
-type ValueType = {
-    id: number;
-    name: string;
-};
-
 interface ModalProps {
     open: boolean;
     onClose: () => void;
@@ -29,9 +24,9 @@ interface ModalProps {
     endDate: Date;
     onChangeStartDate: (Date) => void;
     onChangeEndDate: (Date) => void;
-    selectedValue: ValueType;
-    onChangeSelection: (event: React.ChangeEvent<{ name?: string; value: ValueType }>) => void;
-    scooterList: Array<ValueType>;
+    selectedValue: string;
+    onChangeSelection: (event: React.ChangeEvent<{ name?: string; value: string }>) => void;
+    scooterList: Array<string>;
     onAddEvent: () => void;
 }
 
