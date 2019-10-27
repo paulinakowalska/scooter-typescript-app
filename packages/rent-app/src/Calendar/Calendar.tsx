@@ -18,7 +18,7 @@ interface CalendarProps {
     events?: Array<object> | Array<void>;
     /** default new Date.now() */
     defaultDate?: Date | number;
-    localizer?: Object;
+    localizer?: object;
 }
 
 const scooterList = [

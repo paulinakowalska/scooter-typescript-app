@@ -29,13 +29,13 @@ interface ModalProps {
     endDate: Date;
     onChangeStartDate: (Date) => void;
     onChangeEndDate: (Date) => void;
-    selectedValue: {};
+    selectedValue: ValueType;
     onChangeSelection: (event: React.ChangeEvent<{ name?: string; value: ValueType }>) => void;
     scooterList: Array<ValueType>;
     onAddEvent: () => void;
 }
 
-const EventModal: React.FunctionComponent = ({
+const EventModal: React.FunctionComponent<ModalProps> = ({
     open,
     onClose,
     startDate,
@@ -46,7 +46,7 @@ const EventModal: React.FunctionComponent = ({
     onChangeSelection,
     scooterList,
     onAddEvent,
-}: ModalProps) => {
+}) => {
     const handleAddEvent = () => {
         onClose();
         onAddEvent();

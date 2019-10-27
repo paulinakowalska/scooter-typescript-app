@@ -13,26 +13,23 @@ interface SelectProps {
     data: Array<ValueType>;
 }
 
-const SelectAvailableItem: React.FunctionComponent = ({ label, value, onChange, data }: SelectProps) => {
-    return (
-        <React.Fragment>
-            <InputLabel htmlFor="simple-select">{label}</InputLabel>
-            <Select
-                value={value}
-                onChange={onChange}
-                inputProps={{
-                    name: 'available item',
-                    id: 'simple-select',
-                }}
-            >
-                {data.map((item: { id: number; name: string }) => (
-                    <MenuItem key={item.id} value={item}>
-                        {item.name}
-                    </MenuItem>
-                ))}
-            </Select>
-        </React.Fragment>
-    );
-};
-
+const SelectAvailableItem: React.FunctionComponent<SelectProps> = ({ label, data, value, onChange }) => (
+    <React.Fragment>
+        <InputLabel htmlFor="simple-select">{label}</InputLabel>
+        <Select
+            value={value}
+            onChange={onChange}
+            inputProps={{
+                name: 'available item',
+                id: 'simple-select',
+            }}
+        >
+            {data.map((item: { id: number; name: string }) => (
+                <MenuItem key={item.id} value={item}>
+                    {item.name}
+                </MenuItem>
+            ))}
+        </Select>
+    </React.Fragment>
+);
 export default SelectAvailableItem;
