@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import '!style-loader!css-loader!react-big-calendar/lib/css/react-big-calendar.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
 import EventModal from '../EventModal/EventModal';
 const CalendarContainer = styled.div`
@@ -94,6 +94,7 @@ const Calendar = ({
                 localizer={localizer}
                 selectable
                 onSelectSlot={handleSelectSlot}
+                views={['month', 'week', 'day']}
             />
             <EventModal
                 open={open}
