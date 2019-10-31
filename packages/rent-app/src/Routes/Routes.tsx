@@ -9,7 +9,7 @@ import Account from '../Account/Account';
 import PageNotFount from '../PageNotFound/PageNotFound';
 
 const RouteList = styled.div`
-    width: ${props => props.theme.width};
+    max-width: ${props => props.theme.width};
     margin: 0 auto;
     padding: ${props => props.theme.space.medium} 0;
 `;

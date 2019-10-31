@@ -1,17 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { Drawer, Button, ListItem } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const HeaderContainer = styled.div`
     display: flex;
-    justify-content: center;
-    background-color: ${props => props.theme.colors.lightPink};
-`;
-
-const HeaderNavbar = styled.div`
-    width: ${props => props.theme.width};
-    font-size: ${props => props.theme.fonts.size.medium};
-    margin: ${props => props.theme.space.medium} ${props => props.theme.space.larger};
+    justify-content: flex-end;
 `;
 
 const activeClassName = 'active';
@@ -50,15 +45,38 @@ const navLinks = [
 ];
 
 const Header = () => {
+    const [open, setOpenState] = React.useState(false);
+
+    const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+            event.type === 'keydown' &&
+            ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+            return;
+        }
+        if (open) {
+            setOpenState(false);
+        } else {
+            setOpenState(true);
+        }
+    };
+
     return (
         <HeaderContainer>
-            <HeaderNavbar>
-                {navLinks.map(({ path, label }, i) => (
-                    <StyledLink exact to={path} key={i}>
-                        {label}
-                    </StyledLink>
-                ))}
-            </HeaderNavbar>
+            <React.Fragment>
+                <Button color="primary" size="large" onClick={toggleDrawer}>
+                    <MenuIcon fontSize="large" />
+                </Button>
+                <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                    {navLinks.map(({ path, label }, i) => (
+                        <ListItem button key={i}>
+                            <StyledLink exact to={path} key={i}>
+                                {label}
+                            </StyledLink>
+                        </ListItem>
+                    ))}
+                </Drawer>
+            </React.Fragment>
         </HeaderContainer>
     );
 };
