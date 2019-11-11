@@ -1,0 +1,16 @@
+[
+  {
+    "id": 123,
+    "name": "userName1",
+    "scooterId": 1,
+    "startDate": "2019-10-01",
+    "endDate": "2019-10-03"
+  },
+  {
+    "id": 234,
+    "name": "userName2",
+    "scooterId": 3,
+    "startDate": "2019-10-04",
+    "endDate": "2019-10-05"
+  }
+]
