@@ -5,8 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon server.ts"
+    "start": "ts-node ./src/server.ts",
+    "start:dev": "nodemon"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm run start",
+    "ext": "ts,json"
+  }
 }

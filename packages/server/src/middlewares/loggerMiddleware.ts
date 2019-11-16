@@ -5,4 +5,4 @@ function loggerMiddleware(request: express.Request, response: express.Response, 
     next();
 }
 
-module.exports = loggerMiddleware;
+export default loggerMiddleware;
