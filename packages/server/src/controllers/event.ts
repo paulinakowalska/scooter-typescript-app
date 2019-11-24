@@ -1,18 +1,39 @@
 const eventsData = require('../database/events.json');
 
+type EventFilterParams = {
+    eventId: string;
+    userId: string;
+    scooterId: string;
+    startDate: string;
+    endDate: string;
+};
+
+type EventModel = {
+    id: number;
+    title: string;
+    allDay: true;
+    start: string;
+    end: string;
+    userId: string;
+    scooterId: string;
+};
+
 class EventController {
-    getEvents() {
+    getEvents(): Array<EventModel> {
         return JSON.parse(JSON.stringify(eventsData));
     }
 
-    getEventsBy(params) {
+    getEventsBy(params: EventFilterParams): Array<EventModel> {
         const { eventId, userId, scooterId, startDate, endDate } = params;
 
-        const data = JSON.parse(JSON.stringify(eventsData));
+        const data: Array<EventModel> = JSON.parse(JSON.stringify(eventsData));
 
         return data.filter(
-            ({ id, start, end }: { id: number; start: string; end: string }) =>
-                id === Number(eventId) || start === startDate || end === endDate,
+            (data: EventModel) =>
+                data.id === Number(eventId) ||
+                (data.start === startDate && data.end === endDate) ||
+                data.userId === userId ||
+                data.scooterId === scooterId,
         );
     }
 }
