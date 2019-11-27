@@ -13,7 +13,8 @@
     "lerna": "lerna",
     "storybook": "start-storybook -p 6006",
     "prebuild:storybook": "npm run test:generate-output",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "start:dev-server": "npx lerna run start:dev --scope @rent/server --stream"
   },
   "author": "Paulina Kowalska",
   "license": "ISC",
@@ -50,6 +51,7 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-styled-components": "^1.10.6",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "css-loader": "^3.2.0",
     "date-fns": "^2.0.0-beta.5",
     "enzyme": "^3.10.0",

@@ -16,25 +16,25 @@ interface CalendarProps {
     localizer?: object;
 }
 
-const scooterList = ['Scooter  #1', 'Scooter  #2', 'Scooter  #3', 'Scooter  #4'];
+const scooterList = ['EventModel  #1', 'EventModel  #2', 'EventModel  #3', 'EventModel  #4'];
 
 const eventsList = [
     {
         id: 0,
-        title: 'All Day Event very long title',
+        title: 'All Day EventModel very long title',
         allDay: true,
         start: new Date(2019, 9, 1),
         end: new Date(2019, 9, 2),
     },
     {
         id: 1,
-        title: 'Long Event',
+        title: 'Long EventModel',
         start: new Date(2019, 9, 7),
         end: new Date(2019, 9, 10),
     },
     {
         id: 2,
-        title: 'Right now Time Event',
+        title: 'Right now Time EventModel',
         start: new Date(),
         end: new Date(),
     },
