@@ -5,7 +5,9 @@
   },
   {
     "id": 2,
-    "name": "scooter 2"
+    "name": "scooter 2",
+    "startDate":  "2019-10-01",
+    "endDate": "2019-10-02"
   },
   {
     "id": 3,
