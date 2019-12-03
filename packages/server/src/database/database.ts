@@ -1,7 +1,5 @@
 import { createConnection } from 'typeorm';
-import { User } from '../models/userModel';
-import { Scooter } from '../models/scooterModel';
-import { Event } from '../models/eventModel';
+import dbConfig from '../../ormconfig.json';
 
 class DbConnection {
     private db: null;
@@ -14,17 +12,7 @@ class DbConnection {
 
     private static async DbConnect() {
         try {
-            return await createConnection({
-                type: 'postgres',
-                host: 'localhost',
-                port: 32809,
-                username: 'postgres',
-                password: '',
-                database: 'postgres',
-                entities: [User, Scooter, Event],
-                synchronize: false,
-                logging: false,
-            });
+            return await createConnection(dbConfig as any);
         } catch (e) {
             console.log(e);
             return e;

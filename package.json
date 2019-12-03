@@ -14,8 +14,7 @@
     "storybook": "start-storybook -p 6006",
     "prebuild:storybook": "npm run test:generate-output",
     "build-storybook": "build-storybook",
-    "start:dev-server": "npx lerna run start:dev --scope @rent/server --stream",
-    "run:dev": "nodemon packages/server/src/server.ts"
+    "start:dev-server": "npx lerna run start:dev --scope @rent/server --stream"
   },
   "author": "Paulina Kowalska",
   "license": "ISC",
@@ -75,7 +74,7 @@
     "react-docgen-typescript-loader": "^3.3.0",
     "react-dom": "^16.10.2",
     "react-router-dom": "^5.1.0",
-    "reflect-metadata": "^0.1.b13",
+    "reflect-metadata": "^0.1.13",
     "style-loader": "^1.0.0",
     "styled-components": "^4.4.0",
     "stylelint": "^11.0.0",

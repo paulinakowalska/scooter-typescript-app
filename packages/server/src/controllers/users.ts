@@ -1,16 +1,32 @@
-const userData = require('../database/users.json');
-
-type UserModel = {
-    id: number;
-    name: string;
-    scooterId: number;
-    startDate: string;
-    endDate: string;
-};
+import { User } from '../models/userModel';
+import { NewDataBase } from '../database/database';
 
 class UserController {
-    getUsers(): Array<UserModel> {
-        return JSON.parse(JSON.stringify(userData));
+    static async getUsers() {
+        const connection = await NewDataBase.Get();
+        return await connection.getRepository(User).find();
+    }
+
+    static async insertUsers(users) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .insert()
+            .into(User)
+            .values(users)
+            .execute();
+    }
+
+    static async deleteUsers(id) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .delete()
+            .from(User)
+            .where('id = :id', { id })
+            .execute();
     }
 }
 

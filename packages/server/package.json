@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node ./src/server.ts",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "typeorm": "ts-node ../../node_modules/typeorm/cli.js"
   },
   "author": "",
   "license": "ISC",

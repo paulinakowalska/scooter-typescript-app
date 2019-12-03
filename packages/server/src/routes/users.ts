@@ -4,14 +4,46 @@ import { Request, Response, Router } from 'express';
 const router: Router = express.Router();
 import UserController from '../controllers/users';
 
-const usersHandler = (req: Request, res: Response) => {
-    const scooterController = new UserController();
+const usersHandler = async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController();
 
-    const response = scooterController.getUsers();
+        const response = await UserController.getUsers();
 
-    res.json(response);
+        res.json(response);
+    } catch (err) {
+        res.json({ err });
+    }
+};
+
+const postUsersHandler = async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController();
+
+        await UserController.insertUsers(req.body.users);
+
+        res.json({ status: 'OK' });
+    } catch (err) {
+        res.json({ err });
+    }
+};
+
+const deleteUsersHandler = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const userController = new UserController();
+
+        const response = await UserController.deleteUsers(id);
+
+        res.json(response);
+    } catch (err) {
+        res.json({ err });
+    }
 };
 
 router.get('/', usersHandler);
+router.post('/', postUsersHandler);
+router.delete('/:id/', deleteUsersHandler);
 
 export default router;
