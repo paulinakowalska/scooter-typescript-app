@@ -2,12 +2,12 @@ import { User } from '../models/userModel';
 import { NewDataBase } from '../database/database';
 
 class UserController {
-    static async getUsers() {
+    async getUsers() {
         const connection = await NewDataBase.Get();
         return await connection.getRepository(User).find();
     }
 
-    static async insertUsers(users) {
+    async insertUsers(users: any) {
         const connection = await NewDataBase.Get();
 
         await connection
@@ -18,7 +18,7 @@ class UserController {
             .execute();
     }
 
-    static async deleteUsers(id) {
+    async deleteUsers(id) {
         const connection = await NewDataBase.Get();
 
         await connection

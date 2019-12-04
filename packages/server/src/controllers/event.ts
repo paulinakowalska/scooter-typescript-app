@@ -1,4 +1,5 @@
-const eventsData = require('../database/events.json');
+import { NewDataBase } from '../database/database';
+import { Event } from '../models/eventModel';
 
 type EventFilterParams = {
     eventId: string;
@@ -8,33 +9,41 @@ type EventFilterParams = {
     endDate: string;
 };
 
-type EventModel = {
-    id: number;
-    title: string;
-    allDay: true;
-    start: string;
-    end: string;
-    userId: string;
-    scooterId: string;
-};
-
 class EventController {
-    getEvents(): Array<EventModel> {
-        return JSON.parse(JSON.stringify(eventsData));
+    async getEvents() {
+        const connection = await NewDataBase.Get();
+        return await connection.getRepository(Event).find();
     }
 
-    getEventsBy(params: EventFilterParams): Array<EventModel> {
+    async getEventsBy(params: EventFilterParams) {
         const { eventId, userId, scooterId, startDate, endDate } = params;
 
-        const data: Array<EventModel> = JSON.parse(JSON.stringify(eventsData));
+        const connection = await NewDataBase.Get();
+        return await connection
+            .getRepository(Event)
+            .find({ where: [{ id: eventId }, { startDate }, { endDate }, { userId }, { scooterId }] });
+    }
 
-        return data.filter(
-            (data: EventModel) =>
-                data.id === Number(eventId) ||
-                (data.start === startDate && data.end === endDate) ||
-                data.userId === userId ||
-                data.scooterId === scooterId,
-        );
+    async insertEvent(events: Event | string) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .insert()
+            .into(Event)
+            .values(events)
+            .execute();
+    }
+
+    async deleteEvent(id) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .delete()
+            .from(Event)
+            .where('id = :id', { id })
+            .execute();
     }
 }
 

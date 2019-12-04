@@ -8,7 +8,7 @@ const usersHandler = async (req: Request, res: Response) => {
     try {
         const userController = new UserController();
 
-        const response = await UserController.getUsers();
+        const response = await userController.getUsers();
 
         res.json(response);
     } catch (err) {
@@ -20,7 +20,7 @@ const postUsersHandler = async (req: Request, res: Response) => {
     try {
         const userController = new UserController();
 
-        await UserController.insertUsers(req.body.users);
+        await userController.insertUsers(req.body.users);
 
         res.json({ status: 'OK' });
     } catch (err) {
@@ -34,7 +34,7 @@ const deleteUsersHandler = async (req: Request, res: Response) => {
 
         const userController = new UserController();
 
-        const response = await UserController.deleteUsers(id);
+        const response = await userController.deleteUsers(id);
 
         res.json(response);
     } catch (err) {

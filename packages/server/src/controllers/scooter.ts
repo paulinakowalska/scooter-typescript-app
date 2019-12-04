@@ -1,32 +1,39 @@
-const scooterData = require('../database/scooters.json');
-
-type ScooterFilterParams = {
-    scooterId: string;
-    startDate: string;
-    endDate: string;
-};
-
-type ScooterModel = {
-    id: number;
-    name: string;
-    startDate: string;
-    endDate: string;
-};
+import { NewDataBase } from '../database/database';
+import { Scooter } from '../models/scooterModel';
 
 class ScooterController {
-    getScooters(): Array<ScooterModel> {
-        return JSON.parse(JSON.stringify(scooterData));
+    async getScooters() {
+        const connection = await NewDataBase.Get();
+        return await connection.getRepository(Scooter).find();
     }
 
-    getScootersBy(params: ScooterFilterParams): Array<ScooterModel> {
+    async getScootersBy(params: any) {
         const { scooterId, startDate, endDate } = params;
 
-        const data = JSON.parse(JSON.stringify(scooterData));
+        const connection = await NewDataBase.Get();
+        return await connection.getRepository(Scooter).find({ where: [{ id: scooterId }, { startDate }, { endDate }] });
+    }
 
-        return data.filter(
-            (data: ScooterModel) =>
-                data.id === Number(scooterId) || (data.startDate === startDate && data.endDate === endDate),
-        );
+    async insertScooters(scooters: any) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .insert()
+            .into(Scooter)
+            .values(scooters)
+            .execute();
+    }
+
+    async deleteScooter(id) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .delete()
+            .from(Scooter)
+            .where('id = :id', { id })
+            .execute();
     }
 }
 
