@@ -42,8 +42,21 @@ const deleteUsersHandler = async (req: Request, res: Response) => {
     }
 };
 
+const updateUserHandler = async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController();
+
+        await userController.updateUser(req.body.user);
+
+        res.json({ status: 'OK' });
+    } catch (err) {
+        res.json({ err });
+    }
+};
+
 router.get('/', usersHandler);
 router.post('/', postUsersHandler);
 router.delete('/:id/', deleteUsersHandler);
+router.patch('/', updateUserHandler);
 
 export default router;

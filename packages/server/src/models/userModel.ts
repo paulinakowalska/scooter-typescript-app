@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Event } from './eventModel';
 
 @Entity()
 export class User extends BaseEntity {
@@ -9,4 +10,10 @@ export class User extends BaseEntity {
         length: 100,
     })
     name: string;
+
+    // role  ( admin/user  )
+
+    @OneToMany(() => Event, event => event.user)
+    @JoinColumn()
+    event: Event;
 }

@@ -2,6 +2,7 @@ import express from 'express';
 import { Router, Request, Response } from 'express';
 
 import ScooterController from '../controllers/scooter';
+
 const router: Router = express.Router();
 
 const scootersHandler = async (req: Request, res: Response) => {
@@ -49,8 +50,21 @@ const deleteScootersHandler = async (req: Request, res: Response) => {
     }
 };
 
+const updateScootersHandler = async (req: Request, res: Response) => {
+    try {
+        const scooterController = new ScooterController();
+
+        await scooterController.updateScooter(req.body.scooter);
+
+        res.json({ status: 'OK' });
+    } catch (err) {
+        res.json({ err });
+    }
+};
+
 router.get('/', scootersHandler);
 router.post('/', postScootersHandler);
 router.delete('/:id/', deleteScootersHandler);
+router.patch('/', updateScootersHandler);
 
 export default router;

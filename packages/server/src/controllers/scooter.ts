@@ -25,6 +25,17 @@ class ScooterController {
             .execute();
     }
 
+    async updateScooter(scooter) {
+        const connection = await NewDataBase.Get();
+
+        await connection
+            .createQueryBuilder()
+            .update(Scooter)
+            .set(scooter)
+            .where('id = :id', { id: scooter.id })
+            .execute();
+    }
+
     async deleteScooter(id) {
         const connection = await NewDataBase.Get();
 

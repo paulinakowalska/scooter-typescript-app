@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany, JoinColumn } from 'typeorm';
+import { Event } from './eventModel';
 
 @Entity()
 export class Scooter extends BaseEntity {
@@ -9,4 +10,8 @@ export class Scooter extends BaseEntity {
         length: 100,
     })
     name: string;
+
+    @OneToMany(() => Event, event => event.scooter)
+    @JoinColumn()
+    event: Event;
 }

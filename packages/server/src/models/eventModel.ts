@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, BaseEntity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
 import { User } from './userModel';
 import { Scooter } from './scooterModel';
 
@@ -18,11 +18,11 @@ export class Event extends BaseEntity {
     @Column()
     endDate: string;
 
-    @OneToOne(() => User)
+    @ManyToOne(() => User, user => user.event, { onDelete: 'CASCADE', cascade: ['remove'] })
     @JoinColumn()
     user: User;
 
-    @OneToOne(() => Scooter)
+    @ManyToOne(() => Scooter, scooter => scooter.event, { onDelete: 'CASCADE', cascade: ['remove'] })
     @JoinColumn()
     scooter: Scooter;
 }
