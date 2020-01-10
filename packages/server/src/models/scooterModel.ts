@@ -11,6 +11,16 @@ export class Scooter extends BaseEntity {
     })
     name: string;
 
+    @Column({
+        length: 100,
+    })
+    model: string;
+
+    @Column({
+        length: 100,
+    })
+    status: string;
+
     @OneToMany(() => Event, event => event.scooter)
     @JoinColumn()
     event: Event;

@@ -1,20 +1,31 @@
 import { NewDataBase } from '../database/database';
 import { Event } from '../models/eventModel';
 import UserController from '../controllers/users';
+import ScooterController from '../controllers/scooter';
 
 type EventFilterParams = {
     eventId?: string;
-    userId?: string;
-    scooterId?: string;
     startDate?: string;
     endDate?: string;
+    userId?: string;
+    scooterId?: string;
+};
+
+type EventOptions = {
+    id?: number;
+    name: string;
+    startDate: string;
+    endDate: string;
+    userId: number;
+    scooterId: number;
 };
 
 class EventController {
     async getEvents() {
         const connection = await NewDataBase.Get();
 
-        return await connection.getRepository(Event).find();
+        const eventRepository = connection.getRepository(Event);
+        return await eventRepository.find({ relations: ['scooter', 'user'] });
     }
 
     async getEventsBy(params: EventFilterParams) {
@@ -22,44 +33,51 @@ class EventController {
 
         const connection = await NewDataBase.Get();
 
-        return await connection
-            .getRepository(Event)
-            .find({ where: [{ id: eventId }, { startDate }, { endDate }, { userId }, { scooterId }] });
+        const eventRepository = connection.getRepository(Event);
+        return await eventRepository.find({
+            relations: ['scooter', 'user'],
+            where: [{ id: eventId }, { startDate }, { endDate }, { user: userId }, { scooter: scooterId }],
+        });
     }
 
-    async insertEvent(events) {
+    async insertEvent(options: EventOptions) {
+        const [user] = await new UserController().getUsersBy({ id: options.userId });
+        const [scooter] = await new ScooterController().getScootersBy({ id: options.scooterId });
+
+        const event = new Event();
+
+        event.name = options.name;
+        event.startDate = options.startDate;
+        event.endDate = options.endDate;
+        event.user = user;
+        event.scooter = scooter;
+
         const connection = await NewDataBase.Get();
 
-        await new UserController().getUsersBy({ id: events.userId });
-
-        await connection
-            .createQueryBuilder()
-            .insert()
-            .into(Event)
-            .values(events)
-            .execute();
+        await connection.manager.save(event);
     }
 
-    async updateEvent(event) {
+    async updateEvent(options: EventOptions) {
+        const [user] = await new UserController().getUsersBy({ id: options.userId });
+        const [scooter] = await new ScooterController().getScootersBy({ id: options.scooterId });
+
+        const event = new Event();
+
+        event.name = options.name;
+        event.startDate = options.startDate;
+        event.endDate = options.endDate;
+        event.user = user;
+        event.scooter = scooter;
+
         const connection = await NewDataBase.Get();
 
-        await connection
-            .createQueryBuilder()
-            .update(Event)
-            .set(event)
-            .where('id = :id', { id: event.id })
-            .execute();
+        await connection.manager.update(Event, options.id, event);
     }
 
-    async deleteEvent(id) {
+    async deleteEvent(id: string) {
         const connection = await NewDataBase.Get();
 
-        await connection
-            .createQueryBuilder()
-            .delete()
-            .from(Event)
-            .where('id = :id', { id })
-            .execute();
+        await connection.manager.delete(Event, id);
     }
 }
 

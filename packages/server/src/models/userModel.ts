@@ -11,7 +11,30 @@ export class User extends BaseEntity {
     })
     name: string;
 
-    // role  ( admin/user  )
+    @Column({
+        length: 100,
+    })
+    firstName: string;
+
+    @Column({
+        length: 100,
+    })
+    lastName: string;
+
+    @Column({
+        length: 100,
+    })
+    mail: string;
+
+    @Column({
+        length: 100,
+    })
+    phoneNumber: string;
+
+    @Column({
+        length: 100,
+    })
+    role: string;
 
     @OneToMany(() => Event, event => event.user)
     @JoinColumn()

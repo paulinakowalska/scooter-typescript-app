@@ -17,10 +17,9 @@ const scootersHandler = async (req: Request, res: Response) => {
         } else {
             response = await scooterController.getScooters();
         }
-
         res.json(response);
     } catch (err) {
-        res.json({ err });
+        res.json(err);
     }
 };
 
@@ -28,11 +27,23 @@ const postScootersHandler = async (req: Request, res: Response) => {
     try {
         const scooterController = new ScooterController();
 
-        await scooterController.insertScooters(req.body.scooters);
+        await scooterController.insertScooters(req.body);
 
         res.json({ status: 'OK' });
     } catch (err) {
-        res.json({ err });
+        res.json(err);
+    }
+};
+
+const updateScootersHandler = async (req: Request, res: Response) => {
+    try {
+        const scooterController = new ScooterController();
+
+        await scooterController.updateScooter(req.body);
+
+        res.json({ status: 'OK' });
+    } catch (err) {
+        res.json(err);
     }
 };
 
@@ -42,29 +53,18 @@ const deleteScootersHandler = async (req: Request, res: Response) => {
 
         const scooterController = new ScooterController();
 
-        const response = await scooterController.deleteScooter(id);
+        await scooterController.deleteScooter(id);
 
-        res.json(response);
+        res.json({ status: 'OK', message: `Deleted user with id: ${id}` });
     } catch (err) {
-        res.json({ err });
-    }
-};
-
-const updateScootersHandler = async (req: Request, res: Response) => {
-    try {
-        const scooterController = new ScooterController();
-
-        await scooterController.updateScooter(req.body.scooter);
-
-        res.json({ status: 'OK' });
-    } catch (err) {
-        res.json({ err });
+        res.json(err);
     }
 };
 
 router.get('/', scootersHandler);
 router.post('/', postScootersHandler);
-router.delete('/:id/', deleteScootersHandler);
 router.patch('/', updateScootersHandler);
+router.put('/', updateScootersHandler);
+router.delete('/:id/', deleteScootersHandler);
 
 export default router;

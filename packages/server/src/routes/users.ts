@@ -1,8 +1,9 @@
 import express from 'express';
 import { Request, Response, Router } from 'express';
 
-const router: Router = express.Router();
 import UserController from '../controllers/users';
+
+const router: Router = express.Router();
 
 const usersHandler = async (req: Request, res: Response) => {
     try {
@@ -12,7 +13,7 @@ const usersHandler = async (req: Request, res: Response) => {
 
         res.json(response);
     } catch (err) {
-        res.json({ err });
+        res.json(err);
     }
 };
 
@@ -20,11 +21,11 @@ const postUsersHandler = async (req: Request, res: Response) => {
     try {
         const userController = new UserController();
 
-        await userController.insertUsers(req.body.users);
+        await userController.insertUsers(req.body);
 
         res.json({ status: 'OK' });
     } catch (err) {
-        res.json({ err });
+        res.json(err);
     }
 };
 
@@ -34,11 +35,11 @@ const deleteUsersHandler = async (req: Request, res: Response) => {
 
         const userController = new UserController();
 
-        const response = await userController.deleteUsers(id);
+        await userController.deleteUsers(id);
 
-        res.json(response);
+        res.json({ status: 'OK', message: `Deleted user with id: ${id}` });
     } catch (err) {
-        res.json({ err });
+        res.json(err);
     }
 };
 
@@ -46,11 +47,11 @@ const updateUserHandler = async (req: Request, res: Response) => {
     try {
         const userController = new UserController();
 
-        await userController.updateUser(req.body.user);
+        await userController.updateUser(req.body);
 
         res.json({ status: 'OK' });
     } catch (err) {
-        res.json({ err });
+        res.json(err);
     }
 };
 
@@ -58,5 +59,6 @@ router.get('/', usersHandler);
 router.post('/', postUsersHandler);
 router.delete('/:id/', deleteUsersHandler);
 router.patch('/', updateUserHandler);
+router.put('/', updateUserHandler);
 
 export default router;
