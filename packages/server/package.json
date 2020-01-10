@@ -2,11 +2,12 @@
   "name": "@rent/server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node ./src/server.ts",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "typeorm": "ts-node ../../node_modules/typeorm/cli.js"
   },
   "author": "",
   "license": "ISC",

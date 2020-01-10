@@ -1,40 +1,83 @@
-const eventsData = require('../database/events.json');
+import { NewDataBase } from '../database/database';
+import { Event } from '../models/eventModel';
+import UserController from '../controllers/users';
+import ScooterController from '../controllers/scooter';
 
 type EventFilterParams = {
-    eventId: string;
-    userId: string;
-    scooterId: string;
-    startDate: string;
-    endDate: string;
+    eventId?: string;
+    startDate?: string;
+    endDate?: string;
+    userId?: string;
+    scooterId?: string;
 };
 
-type EventModel = {
-    id: number;
-    title: string;
-    allDay: true;
-    start: string;
-    end: string;
-    userId: string;
-    scooterId: string;
+type EventOptions = {
+    id?: number;
+    name: string;
+    startDate: string;
+    endDate: string;
+    userId: number;
+    scooterId: number;
 };
 
 class EventController {
-    getEvents(): Array<EventModel> {
-        return JSON.parse(JSON.stringify(eventsData));
+    async getEvents() {
+        const connection = await NewDataBase.Get();
+
+        const eventRepository = connection.getRepository(Event);
+        return await eventRepository.find({ relations: ['scooter', 'user'] });
     }
 
-    getEventsBy(params: EventFilterParams): Array<EventModel> {
+    async getEventsBy(params: EventFilterParams) {
         const { eventId, userId, scooterId, startDate, endDate } = params;
 
-        const data: Array<EventModel> = JSON.parse(JSON.stringify(eventsData));
+        const connection = await NewDataBase.Get();
 
-        return data.filter(
-            (data: EventModel) =>
-                data.id === Number(eventId) ||
-                (data.start === startDate && data.end === endDate) ||
-                data.userId === userId ||
-                data.scooterId === scooterId,
-        );
+        const eventRepository = connection.getRepository(Event);
+        return await eventRepository.find({
+            relations: ['scooter', 'user'],
+            where: [{ id: eventId }, { startDate }, { endDate }, { user: userId }, { scooter: scooterId }],
+        });
+    }
+
+    async insertEvent(options: EventOptions) {
+        const [user] = await new UserController().getUsersBy({ id: options.userId });
+        const [scooter] = await new ScooterController().getScootersBy({ id: options.scooterId });
+
+        const event = new Event();
+
+        event.name = options.name;
+        event.startDate = options.startDate;
+        event.endDate = options.endDate;
+        event.user = user;
+        event.scooter = scooter;
+
+        const connection = await NewDataBase.Get();
+
+        await connection.manager.save(event);
+    }
+
+    async updateEvent(options: EventOptions) {
+        const [user] = await new UserController().getUsersBy({ id: options.userId });
+        const [scooter] = await new ScooterController().getScootersBy({ id: options.scooterId });
+
+        const event = new Event();
+
+        event.name = options.name;
+        event.startDate = options.startDate;
+        event.endDate = options.endDate;
+        event.user = user;
+        event.scooter = scooter;
+
+        const connection = await NewDataBase.Get();
+
+        await connection.manager.update(Event, options.id, event);
+    }
+
+    async deleteEvent(id: string) {
+        const connection = await NewDataBase.Get();
+
+        await connection.manager.delete(Event, id);
     }
 }
 

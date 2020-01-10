@@ -1,17 +1,64 @@
 import express from 'express';
 import { Request, Response, Router } from 'express';
 
-const router: Router = express.Router();
 import UserController from '../controllers/users';
 
-const usersHandler = (req: Request, res: Response) => {
-    const scooterController = new UserController();
+const router: Router = express.Router();
 
-    const response = scooterController.getUsers();
+const usersHandler = async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController();
 
-    res.json(response);
+        const response = await userController.getUsers();
+
+        res.json(response);
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+const postUsersHandler = async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController();
+
+        await userController.insertUsers(req.body);
+
+        res.json({ status: 'OK' });
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+const deleteUsersHandler = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const userController = new UserController();
+
+        await userController.deleteUsers(id);
+
+        res.json({ status: 'OK', message: `Deleted user with id: ${id}` });
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+const updateUserHandler = async (req: Request, res: Response) => {
+    try {
+        const userController = new UserController();
+
+        await userController.updateUser(req.body);
+
+        res.json({ status: 'OK' });
+    } catch (err) {
+        res.json(err);
+    }
 };
 
 router.get('/', usersHandler);
+router.post('/', postUsersHandler);
+router.delete('/:id/', deleteUsersHandler);
+router.patch('/', updateUserHandler);
+router.put('/', updateUserHandler);
 
 export default router;

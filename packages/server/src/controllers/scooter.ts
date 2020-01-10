@@ -1,32 +1,79 @@
-const scooterData = require('../database/scooters.json');
+import { NewDataBase } from '../database/database';
+import { Scooter } from '../models/scooterModel';
+import { Event } from '../models/eventModel';
+import { Any } from 'typeorm';
 
-type ScooterFilterParams = {
-    scooterId: string;
-    startDate: string;
-    endDate: string;
+type ScootersFilterParams = {
+    id?: number;
+    name?: string;
+    model?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
 };
 
-type ScooterModel = {
-    id: number;
+type ScooterOptions = {
+    id?: number;
     name: string;
-    startDate: string;
-    endDate: string;
+    model: string;
+    status: string;
 };
 
 class ScooterController {
-    getScooters(): Array<ScooterModel> {
-        return JSON.parse(JSON.stringify(scooterData));
+    async getScooters() {
+        const connection = await NewDataBase.Get();
+        return await connection.getRepository(Scooter).find();
     }
 
-    getScootersBy(params: ScooterFilterParams): Array<ScooterModel> {
-        const { scooterId, startDate, endDate } = params;
+    async getScootersBy(params: ScootersFilterParams) {
+        try {
+            const { id, name, model, status, startDate, endDate } = params;
 
-        const data = JSON.parse(JSON.stringify(scooterData));
+            const connection = await NewDataBase.Get();
+            const eventRepository = connection.getRepository(Event);
+            const eventsFilteredByDate = await eventRepository.find({
+                relations: ['scooter', 'user'],
+                where: [{ startDate }, { endDate }],
+            });
 
-        return data.filter(
-            (data: ScooterModel) =>
-                data.id === Number(scooterId) || (data.startDate === startDate && data.endDate === endDate),
-        );
+            const eventIdsFilteredByDate = eventsFilteredByDate.map(event => event.scooter && event.scooter.id);
+
+            return await connection
+                .getRepository(Scooter)
+                .find({ where: [{ id }, { name }, { model }, { status }, { id: Any(eventIdsFilteredByDate) }] });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async insertScooters(options: ScooterOptions) {
+        const scooter = new Scooter();
+
+        scooter.name = options.name;
+        scooter.model = options.model;
+        scooter.status = options.status;
+
+        const connection = await NewDataBase.Get();
+
+        await connection.manager.save(scooter);
+    }
+
+    async updateScooter(options: ScooterOptions) {
+        const scooter = new Scooter();
+
+        scooter.name = options.name;
+        scooter.model = options.model;
+        scooter.status = options.status;
+
+        const connection = await NewDataBase.Get();
+
+        await connection.manager.update(Scooter, options.id, scooter);
+    }
+
+    async deleteScooter(id: string) {
+        const connection = await NewDataBase.Get();
+
+        await connection.manager.delete(Scooter, id);
     }
 }
 

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import loggerMiddleware from './middlewares/loggerMiddleware';
 import routes from './routes';
 import cors from 'cors';
+import 'reflect-metadata';
 
 const app = express();
 app.use(cors());
