@@ -3,9 +3,9 @@ import { InputLabel, MenuItem, Select } from '@material-ui/core';
 
 interface SelectProps {
     label: string;
-    onChange: (event: React.ChangeEvent<{ name?: string; value: string }>) => void;
-    value: string;
-    data: Array<string>;
+    onChange: (event: React.ChangeEvent<{ name?: string; value: number }>) => void;
+    value: number;
+    data: Array<number>;
 }
 
 const SelectAvailableItem: React.FunctionComponent<SelectProps> = ({ label, data, value, onChange }) => (
@@ -20,7 +20,7 @@ const SelectAvailableItem: React.FunctionComponent<SelectProps> = ({ label, data
                 id: 'simple-select',
             }}
         >
-            {data.map((item: string) => (
+            {data.map(item => (
                 <MenuItem key={item} value={item}>
                     {item}
                 </MenuItem>

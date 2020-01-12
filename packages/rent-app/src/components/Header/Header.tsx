@@ -23,18 +23,23 @@ const StyledLink = styled(NavLink).attrs({
 
 const navLinks = [
     {
-        label: 'Home',
+        label: 'Events',
         path: '/',
         position: 'left',
     },
     {
-        label: 'About',
-        path: '/about',
+        label: 'Users',
+        path: '/users',
         position: 'right',
     },
     {
-        label: 'Admin',
-        path: '/admin',
+        label: 'Scooters',
+        path: '/scooters',
+        position: 'right',
+    },
+    {
+        label: 'About',
+        path: '/about',
         position: 'right',
     },
     {

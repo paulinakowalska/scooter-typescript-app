@@ -24,9 +24,9 @@ interface ModalProps {
     endDate: Date;
     onChangeStartDate: (Date) => void;
     onChangeEndDate: (Date) => void;
-    selectedValue: string;
-    onChangeSelection: (event: React.ChangeEvent<{ name?: string; value: string }>) => void;
-    scooterList: Array<string>;
+    selectedScooter: number;
+    onChangeSelection: (event: React.ChangeEvent<{ name?: string; value: number }>) => void;
+    scooterList: Array<number>;
     onAddEvent: () => void;
 }
 
@@ -37,7 +37,7 @@ const EventModal: React.FunctionComponent<ModalProps> = ({
     endDate,
     onChangeStartDate,
     onChangeEndDate,
-    selectedValue,
+    selectedScooter,
     onChangeSelection,
     scooterList,
     onAddEvent,
@@ -56,7 +56,7 @@ const EventModal: React.FunctionComponent<ModalProps> = ({
                     <SelectAvailableItem
                         label="Scooters"
                         data={scooterList}
-                        value={selectedValue}
+                        value={selectedScooter}
                         onChange={onChangeSelection}
                     />
                 ) : (
