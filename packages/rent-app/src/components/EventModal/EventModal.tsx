@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from '../DatePicker/DatePicker';
 import { Modal, Button } from '@material-ui/core';
 import styled from 'styled-components';
+import { Moment } from 'moment';
 
 import SelectAvailableItem from '../SelectAvailableItem/SelectAvailableItem';
 
@@ -20,8 +21,8 @@ const EventModalContainer = styled.div`
 interface ModalProps {
     open: boolean;
     onClose: () => void;
-    startDate: Date;
-    endDate: Date;
+    startDate: Moment;
+    endDate: Moment;
     onChangeStartDate: (Date) => void;
     onChangeEndDate: (Date) => void;
     selectedScooter: number;
@@ -46,7 +47,6 @@ const EventModal: React.FunctionComponent<ModalProps> = ({
         onClose();
         onAddEvent();
     };
-
     return (
         <Modal open={open} onClose={onClose}>
             <EventModalContainer>

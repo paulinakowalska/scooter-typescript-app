@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
 import EventModal from '../EventModal/EventModal';
 import EditEventModal from '../EditEventModal/EditEventModal';
-import { addEvent, deleteEvent, getEvents } from '../../api';
+import { addEvent, deleteEvent, getEvents, getScooters } from '../../api';
 import { useStore } from '../../context/ContextProvider';
-import { EventsActions, EventsMap } from '../../context';
+import { EventsActions, EventsMap, ScootersActions } from '../../context';
 
 const CalendarContainer = styled.div`
     height: 500px;
@@ -17,7 +17,7 @@ const CalendarContainer = styled.div`
 interface CalendarProps {
     events?: Array<object> | Array<void>;
     /** default new Date.now() */
-    defaultDate?: Date | number;
+    defaultDate?: Moment;
     localizer?: object;
 }
 
@@ -37,14 +37,14 @@ const formatEvents = (events: EventsMap): { id: number; title: string; start: Da
 /** Calendar custom component wrapper */
 
 const Calendar: FunctionComponent<CalendarProps> = ({
-    defaultDate = moment().toDate(),
+    defaultDate = moment(),
     localizer = momentLocalizer(moment),
 }) => {
     const [openEventModal, setOpenEventModal] = useState(false);
     const [openEditEventModal, setOpenEditEventModal] = useState(false);
     const [selectedScooter, setSelectedScooter] = useState(correctScooterList[0]);
     const [selectedEvent, setSelectedEvent] = useState({});
-    const [startDate, setStartDate] = useState(defaultDate);
+    const [startDate, setStartDate] = useState<moment.Moment>(defaultDate);
     const [endDate, setEndDate] = useState(defaultDate);
     const { state, dispatch } = useStore();
 
@@ -54,6 +54,9 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                 dispatch({ type: EventsActions.SET_LOADING, payload: true });
                 const events = await getEvents();
                 dispatch({ type: EventsActions.SET_EVENTS, payload: { events } }); // dispatch(eventsActions.setEvents({ events }));
+
+                const scooters = await getScooters();
+                dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
             } catch (err) {
                 dispatch({ type: EventsActions.SET_ERROR_MESSAGE, payload: err.message });
             } finally {
@@ -65,15 +68,14 @@ const Calendar: FunctionComponent<CalendarProps> = ({
 
     const handleSelectSlot = (slotInfo: { start: Date }) => {
         const { start } = slotInfo;
-
-        setStartDate(moment(start).toDate());
-        setEndDate(moment(start).toDate());
+        setStartDate(moment(start));
+        setEndDate(moment(start));
         setOpenEventModal(true);
     };
 
     const handleSelectEvent = (event: { start: Date; end: Date }) => {
-        setStartDate(event.start);
-        setEndDate(event.end);
+        setStartDate(moment(event.start));
+        setEndDate(moment(event.end));
 
         setOpenEditEventModal(true);
         setSelectedEvent(event);
@@ -100,13 +102,14 @@ const Calendar: FunctionComponent<CalendarProps> = ({
     };
 
     const handleChangeStartDate = (date: Date) => {
-        setStartDate(moment(date).toDate());
-        if (date > endDate) {
-            setEndDate(moment(date).toDate());
+        setStartDate(moment(date).add(date.getTimezoneOffset(), 'minutes'));
+
+        if (date > endDate.toDate()) {
+            setEndDate(moment(date).add(date.getTimezoneOffset(), 'minutes'));
         }
     };
     const handleChangeEndDate = (date: Date) => {
-        setEndDate(moment(date).toDate());
+        setEndDate(moment(date).add(date.getTimezoneOffset(), 'minutes'));
     };
 
     const handleAddEvent = () => {
@@ -114,8 +117,8 @@ const Calendar: FunctionComponent<CalendarProps> = ({
             try {
                 const event = {
                     name: `${selectedScooter} - User Name`,
-                    startDate,
-                    endDate,
+                    startDate: startDate.utc().valueOf(),
+                    endDate: endDate.utc().valueOf(),
                     scooterId: selectedScooter,
                     userId: 15,
                 };
@@ -153,7 +156,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                 events={formattedEvents}
                 startAccessor="start"
                 endAccessor="end"
-                defaultDate={defaultDate}
+                defaultDate={defaultDate.toDate()}
                 localizer={localizer}
                 selectable
                 onSelectSlot={handleSelectSlot}
@@ -163,8 +166,8 @@ const Calendar: FunctionComponent<CalendarProps> = ({
             <EventModal
                 open={openEventModal}
                 onClose={handleClose}
-                startDate={new Date(startDate)}
-                endDate={new Date(endDate)}
+                startDate={startDate}
+                endDate={endDate}
                 onChangeStartDate={handleChangeStartDate}
                 onChangeEndDate={handleChangeEndDate}
                 selectedScooter={selectedScooter}
@@ -175,8 +178,8 @@ const Calendar: FunctionComponent<CalendarProps> = ({
             <EditEventModal
                 open={openEditEventModal}
                 onClose={handleCloseEvent}
-                startDate={new Date(startDate)}
-                endDate={new Date(endDate)}
+                startDate={startDate}
+                endDate={endDate}
                 onChangeStartDate={handleChangeStartDate}
                 onChangeEndDate={handleChangeEndDate}
                 selectedScooter={selectedScooter}

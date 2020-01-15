@@ -1,6 +1,8 @@
 import React from 'react';
 import DatePicker from '../DatePicker/DatePicker';
 import { Button, Modal } from '@material-ui/core';
+import { Moment } from 'moment';
+
 import styled from 'styled-components';
 
 import SelectAvailableItem from '../SelectAvailableItem/SelectAvailableItem';
@@ -23,15 +25,15 @@ const EventModalContainer = styled.div`
 interface ModalProps {
     open: boolean;
     onClose: () => void;
-    startDate: Date;
-    endDate: Date;
-    onChangeStartDate: (Date) => void;
-    onChangeEndDate: (Date) => void;
+    startDate: Moment;
+    endDate: Moment;
+    onChangeStartDate: (startDate: Date) => void;
+    onChangeEndDate: (endDate: Date) => void;
     selectedScooter: number;
     selectedEvent: { id?: number; title?: string };
     onChangeSelection: (event: React.ChangeEvent<{ name?: string; value: number }>) => void;
     scooterList: Array<number>;
-    onDeleteEvent: (number) => void;
+    onDeleteEvent: (eventId: number) => void;
 }
 
 const EditEventModal: React.FunctionComponent<ModalProps> = ({
@@ -50,13 +52,14 @@ const EditEventModal: React.FunctionComponent<ModalProps> = ({
     const { dispatch } = useStore();
 
     const handleAddEvent = () => {
+        console.log(typeof startDate.utc());
         const updateData = async () => {
             try {
                 const newEvent = {
                     id: selectedEvent.id,
                     name: selectedEvent.title,
-                    startDate: startDate.toISOString(),
-                    endDate: endDate.toISOString(),
+                    startDate: startDate.utc(),
+                    endDate: endDate.utc(),
                     userId: 15,
                     scooterId: selectedScooter,
                 };
@@ -76,15 +79,11 @@ const EditEventModal: React.FunctionComponent<ModalProps> = ({
         onDeleteEvent(selectedEvent.id);
         onClose();
     };
-
-    const formattedStartDate = new Date(startDate);
-    const formattedEndDate = new Date(endDate);
-
     return (
         <Modal open={open} onClose={onClose}>
             <EventModalContainer>
-                <DatePicker date={formattedStartDate} handleDateChange={onChangeStartDate} />
-                <DatePicker date={formattedEndDate} handleDateChange={onChangeEndDate} />
+                <DatePicker date={startDate} handleDateChange={onChangeStartDate} />
+                <DatePicker date={endDate} handleDateChange={onChangeEndDate} />
                 {startDate && endDate ? (
                     <SelectAvailableItem
                         label="Scooters"

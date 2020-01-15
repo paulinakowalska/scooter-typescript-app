@@ -2,9 +2,10 @@ import React from 'react';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { Moment } from 'moment';
 
 interface DatePickerProps {
-    date?: Date | number;
+    date?: Moment | Date | number;
     handleDateChange: (date: Date, value?: string) => void;
     dateFormat?: string;
 }
