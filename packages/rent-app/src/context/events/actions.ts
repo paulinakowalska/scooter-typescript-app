@@ -7,6 +7,6 @@ export const eventsActions = {
     setEvents: (events: SetEventsData) => makeAction(EventsActions.SET_EVENTS, events),
     setErrorMessage: (errorMessage: string) => makeAction(EventsActions.SET_ERROR_MESSAGE, errorMessage),
     updateEvent: (event: Event) => makeAction(EventsActions.UPDATE_EVENT, event),
-    addEvent: (eventId: Event) => makeAction(EventsActions.ADD_EVENT, eventId),
+    addEvent: (event: Event) => makeAction(EventsActions.ADD_EVENT, event),
     deleteEvent: (eventId: number) => makeAction(EventsActions.DELETE_EVENT, eventId),
 };

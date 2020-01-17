@@ -1,159 +1,95 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
-import moment, { Moment } from 'moment';
+import React, { FunctionComponent } from 'react';
+import { Calendar as BigCalendar } from 'react-big-calendar';
+import { Moment } from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
 import EventModal from '../EventModal/EventModal';
 import EditEventModal from '../EditEventModal/EditEventModal';
-import { addEvent, deleteEvent, getEvents, getScooters } from '../../api';
-import { useStore } from '../../context/ContextProvider';
-import { EventsActions, EventsMap, ScootersActions } from '../../context';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const CalendarContainer = styled.div`
     height: 500px;
     margin: 50px;
 `;
 
+const Spinner = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ErrorMessage = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: ${props => props.theme.fonts.size.large};
+    color: ${props => props.theme.colors.darkBlue};
+`;
+
 interface CalendarProps {
-    events?: Array<object> | Array<void>;
     /** default new Date.now() */
     defaultDate?: Moment;
     localizer?: object;
+    isLoading: boolean;
+    isError: string;
+    openEventModal: boolean;
+    handleSelectSlot: (slotInfo: { start: Date }) => void;
+    handleSelectEvent: (event: { start: Date; end: Date }) => void;
+    handleClose: () => void;
+    handleCloseEvent: () => void;
+    handleDeleteEvent: (eventId: number) => void;
+    handleChangeStartDate: (date: Date) => void;
+    handleChangeEndDate: (date: Date) => void;
+    handleAddEvent: () => void;
+    scootersList: Array<number>;
+    eventsList: Array<object>;
+    openEditEventModal: boolean;
+    selectedEvent: object;
+    selectedScooter: number;
+    startDate: Moment;
+    endDate: Moment;
+    handleChangeSelection: (event: React.ChangeEvent<{ name?: string; value: number }>) => void;
 }
-
-const correctScooterList = [2];
-
-const formatEvents = (events: EventsMap): { id: number; title: string; start: Date; end: Date }[] => {
-    return Object.values(events).map(({ id, name, startDate, endDate }) => {
-        return {
-            id,
-            title: name,
-            start: new Date(startDate),
-            end: new Date(endDate),
-        };
-    });
-};
 
 /** Calendar custom component wrapper */
 
 const Calendar: FunctionComponent<CalendarProps> = ({
-    defaultDate = moment(),
-    localizer = momentLocalizer(moment),
+    localizer,
+    defaultDate,
+    isLoading,
+    isError,
+    openEventModal,
+    handleSelectSlot,
+    handleSelectEvent,
+    handleClose,
+    handleCloseEvent,
+    handleDeleteEvent,
+    handleChangeStartDate,
+    handleChangeEndDate,
+    handleAddEvent,
+    scootersList,
+    eventsList,
+    openEditEventModal,
+    selectedEvent,
+    selectedScooter,
+    startDate,
+    endDate,
+    handleChangeSelection,
 }) => {
-    const [openEventModal, setOpenEventModal] = useState(false);
-    const [openEditEventModal, setOpenEditEventModal] = useState(false);
-    const [selectedScooter, setSelectedScooter] = useState(correctScooterList[0]);
-    const [selectedEvent, setSelectedEvent] = useState({});
-    const [startDate, setStartDate] = useState<moment.Moment>(defaultDate);
-    const [endDate, setEndDate] = useState(defaultDate);
-    const { state, dispatch } = useStore();
-
-    useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            try {
-                dispatch({ type: EventsActions.SET_LOADING, payload: true });
-                const events = await getEvents();
-                dispatch({ type: EventsActions.SET_EVENTS, payload: { events } }); // dispatch(eventsActions.setEvents({ events }));
-
-                const scooters = await getScooters();
-                dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
-            } catch (err) {
-                dispatch({ type: EventsActions.SET_ERROR_MESSAGE, payload: err.message });
-            } finally {
-                dispatch({ type: EventsActions.SET_LOADING, payload: false });
-            }
-        };
-        fetchData();
-    }, []); // [] if effect doesn't need props or state
-
-    const handleSelectSlot = (slotInfo: { start: Date }) => {
-        const { start } = slotInfo;
-        setStartDate(moment(start));
-        setEndDate(moment(start));
-        setOpenEventModal(true);
-    };
-
-    const handleSelectEvent = (event: { start: Date; end: Date }) => {
-        setStartDate(moment(event.start));
-        setEndDate(moment(event.end));
-
-        setOpenEditEventModal(true);
-        setSelectedEvent(event);
-    };
-
-    const handleClose = () => {
-        setOpenEventModal(false);
-    };
-
-    const handleCloseEvent = () => {
-        setOpenEditEventModal(false);
-    };
-
-    const handleDeleteEvent = (eventId: number) => {
-        const deleteData = async (): Promise<void> => {
-            try {
-                dispatch({ type: EventsActions.DELETE_EVENT, payload: eventId });
-                await deleteEvent(eventId);
-            } catch (err) {
-                dispatch({ type: EventsActions.SET_ERROR_MESSAGE, payload: err.message });
-            }
-        };
-        deleteData();
-    };
-
-    const handleChangeStartDate = (date: Date) => {
-        setStartDate(moment(date).add(date.getTimezoneOffset(), 'minutes'));
-
-        if (date > endDate.toDate()) {
-            setEndDate(moment(date).add(date.getTimezoneOffset(), 'minutes'));
-        }
-    };
-    const handleChangeEndDate = (date: Date) => {
-        setEndDate(moment(date).add(date.getTimezoneOffset(), 'minutes'));
-    };
-
-    const handleAddEvent = () => {
-        const addData = async () => {
-            try {
-                const event = {
-                    name: `${selectedScooter} - User Name`,
-                    startDate: startDate.utc().valueOf(),
-                    endDate: endDate.utc().valueOf(),
-                    scooterId: selectedScooter,
-                    userId: 15,
-                };
-
-                await addEvent(event);
-
-                const events = await getEvents();
-                dispatch({ type: EventsActions.SET_EVENTS, payload: { events } });
-            } catch (err) {
-                dispatch({ type: EventsActions.SET_ERROR_MESSAGE, payload: err.message });
-            }
-        };
-        addData();
-    };
-
-    const handleChangeSelection = (event: React.ChangeEvent<{ name?: string; value: number }>) => {
-        const { value } = event.target;
-
-        setSelectedScooter(value);
-    };
-
-    if (state.events.isLoading) {
-        return <>loading</>;
+    if (isError) {
+        return <ErrorMessage>ERROR</ErrorMessage>; // todo: fix text
     }
+    // const formattedEvents = formatEvents(state.events.data);
+    // const availableScooters = formatScooters(state.events.data, startDate, endDate);
 
-    if (state.events.errorMessage) {
-        return <>error</>;
-    }
-
-    const formattedEvents = formatEvents(state.events.data);
-
-    return (
+    return isLoading ? (
+        <Spinner>
+            <CircularProgress />
+        </Spinner>
+    ) : (
         <CalendarContainer>
             <BigCalendar
-                events={formattedEvents}
+                events={eventsList}
                 startAccessor="start"
                 endAccessor="end"
                 defaultDate={defaultDate.toDate()}
@@ -172,7 +108,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                 onChangeEndDate={handleChangeEndDate}
                 selectedScooter={selectedScooter}
                 onChangeSelection={handleChangeSelection}
-                scooterList={correctScooterList}
+                scooterList={scootersList}
                 onAddEvent={handleAddEvent}
             />
             <EditEventModal
@@ -185,7 +121,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                 selectedScooter={selectedScooter}
                 selectedEvent={selectedEvent}
                 onChangeSelection={handleChangeSelection}
-                scooterList={correctScooterList}
+                scooterList={scootersList}
                 onDeleteEvent={handleDeleteEvent}
             />
         </CalendarContainer>

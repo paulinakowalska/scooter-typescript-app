@@ -10,6 +10,18 @@ export const getScooters = async (): Promise<ScootersMap> => {
     }, {});
 };
 
+export const getScootersBy = async (params: object): Promise<ScootersMap> => {
+    const urlParams = Object.keys(params)
+        .map(key => `${key}=${params[key]}`)
+        .join('&');
+
+    const scootersList = await axios.get<{}, AxiosResponse<Scooter[]>>(`${api}/scooter?${urlParams}`);
+    return scootersList.data.reduce((map, scooter) => {
+        map[scooter.id] = scooter;
+        return map;
+    }, {});
+};
+
 export const addScooter = async scooter => {
     try {
         await axios.post(`${api}/scooter`, scooter);
@@ -26,4 +38,10 @@ export const deleteScooter = async scooterId => {
     }
 };
 
-// add update
+export const updateScooter = async scooter => {
+    try {
+        await axios.put(`${api}/scooter/`, scooter);
+    } catch (err) {
+        console.error(err);
+    }
+};

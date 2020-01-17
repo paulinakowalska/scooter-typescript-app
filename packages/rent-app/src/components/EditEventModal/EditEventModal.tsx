@@ -52,7 +52,6 @@ const EditEventModal: React.FunctionComponent<ModalProps> = ({
     const { dispatch } = useStore();
 
     const handleAddEvent = () => {
-        console.log(typeof startDate.utc());
         const updateData = async () => {
             try {
                 const newEvent = {

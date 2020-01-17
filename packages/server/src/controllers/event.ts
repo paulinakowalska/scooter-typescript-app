@@ -26,7 +26,16 @@ class EventController {
         const connection = await NewDataBase.Get();
 
         const eventRepository = connection.getRepository(Event);
-        return await eventRepository.find({ relations: ['scooter', 'user'] });
+        const events = await eventRepository.find({ relations: ['scooter', 'user'] });
+        return events.map((event: Event) => ({
+            ...event,
+            startDate: moment(event.startDate)
+                .utc()
+                .valueOf(),
+            endDate: moment(event.endDate)
+                .utc()
+                .valueOf(),
+        }));
     }
 
     async getEventsBy(params: EventFilterParams) {

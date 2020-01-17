@@ -1,10 +1,10 @@
 import React from 'react';
-import { Calendar } from '../Calendar/Calendar';
+import { CalendarWrapper } from '../CalendarWrapper/CalendarWrapper';
 
 const Events: React.FunctionComponent = () => {
     return (
         <div>
-            <Calendar />
+            <CalendarWrapper />
         </div>
     );
 };

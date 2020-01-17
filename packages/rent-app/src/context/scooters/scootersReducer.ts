@@ -19,6 +19,19 @@ export const scootersReducer: Reducer<ScootersState, ScootersAction> = (state = 
             return { ...state, data: action.payload.scooters };
         case ScootersActions.SET_ERROR_MESSAGE:
             return { ...state, errorMessage: action.payload };
+        case ScootersActions.UPDATE_SCOOTER:
+            return { ...state, data: { ...state.data, [action.payload.id]: action.payload } };
+        case ScootersActions.DELETE_SCOOTER: {
+            const scootersList = Object.values({ ...state.data });
+            const filteredScootersList = scootersList.filter(event => event.id !== action.payload);
+
+            const scootersMap = filteredScootersList.reduce((map, scooter) => {
+                map[scooter.id] = scooter;
+                return map;
+            }, {});
+
+            return { ...state, data: scootersMap };
+        }
         default:
             return state;
     }
