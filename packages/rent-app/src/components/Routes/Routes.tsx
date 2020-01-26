@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import About from '../About/About';
-import Scooters from '../Scooters/Scooters';
+import ScootersWrapper from '../ScootersWrapper/ScootersWrapper';
 import Users from '../Users/Users';
 import Events from '../Events/Events';
 import Account from '../Account/Account';
@@ -23,7 +23,7 @@ class Routes extends Component {
                     <Route exact path="/" component={Events} />
                     <Route path="/about" component={About} />
                     <Route path="/account" component={Account} />
-                    <Route path="/scooters" component={Scooters} />
+                    <Route path="/scooters" component={ScootersWrapper} />
                     <Route path="/users" component={Users} />
                     <Route component={PageNotFount} />
                 </Switch>

@@ -23,6 +23,20 @@ const scootersHandler = async (req: Request, res: Response) => {
     }
 };
 
+const getAvailableScooters = async (req: Request, res: Response) => {
+    const params = req.query;
+
+    try {
+        const scooterController = new ScooterController();
+
+        const response = await scooterController.getAvailableScooters(params);
+
+        res.json(response);
+    } catch (err) {
+        res.json(err);
+    }
+};
+
 const postScootersHandler = async (req: Request, res: Response) => {
     try {
         const scooterController = new ScooterController();
@@ -62,6 +76,7 @@ const deleteScootersHandler = async (req: Request, res: Response) => {
 };
 
 router.get('/', scootersHandler);
+router.get('/available', getAvailableScooters);
 router.post('/', postScootersHandler);
 router.patch('/', updateScootersHandler);
 router.put('/', updateScootersHandler);

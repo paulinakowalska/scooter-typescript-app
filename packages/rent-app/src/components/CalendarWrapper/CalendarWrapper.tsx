@@ -5,10 +5,8 @@ import { momentLocalizer } from 'react-big-calendar';
 import { useStore } from '../../context/ContextProvider';
 import { EventsActions, EventsMap } from '../../context/events';
 import { addEvent, deleteEvent, getEvents } from '../../api/events';
-import { getScooters } from '../../api/scooters';
+import { getAvailableScooters } from '../../api/scooters';
 import { ScootersActions } from '../../context/scooters';
-
-const CalendarWrapperProps = {};
 
 const formatEvents = (events: EventsMap): { id: number; title: string; start: Moment; end: Moment }[] => {
     return Object.values(events).map(({ id, name, startDate, endDate }) => {
@@ -20,18 +18,8 @@ const formatEvents = (events: EventsMap): { id: number; title: string; start: Mo
         };
     });
 };
-
 // const formatScooters = (events: object, startDate: Moment, endDate: Moment) => {
-//     const scooterIds = Object.values(events)
-//         .filter(e => e.startDate < startDate || e.endDate > endDate)
-//         .map(e => {
-//             const x = e.startDate > startDate;
-//             console.log('e start', e.startDate);
-//
-//             return e.scooter ? e.scooter.id : null;
-//         });
-//     console.log('start', startDate);
-//
+//     const scooterIds = Object.values(events);
 //     return scooterIds.filter((v, i) => scooterIds.indexOf(v) === i);
 // };
 
@@ -62,6 +50,21 @@ const CalendarWrapper: FunctionComponent = () => {
 
     const handleSelectSlot = (slotInfo: { start: Date }) => {
         const { start } = slotInfo;
+        const fetchData = async (): Promise<void> => {
+            try {
+                // todo : fix date problems ( it should by type: 2020-01-13T00:00:00.000Z )
+
+                const scooters = await getAvailableScooters({
+                    startDate,
+                    endDate,
+                });
+                dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
+            } catch (err) {
+                dispatch({ type: ScootersActions.SET_ERROR_MESSAGE, payload: err.message });
+            }
+        };
+        fetchData();
+
         setStartDate(moment(start));
         setEndDate(moment(start));
         setOpenEventModal(true);
@@ -73,8 +76,12 @@ const CalendarWrapper: FunctionComponent = () => {
 
         const fetchData = async (): Promise<void> => {
             try {
-                const scooters = await getScooters();
-                // const scooters = await getAvailableScooters(startDate, endDate);
+                // todo : fix date problems
+
+                const scooters = await getAvailableScooters({
+                    startDate: event.start,
+                    endDate: event.end,
+                });
                 dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
             } catch (err) {
                 dispatch({ type: ScootersActions.SET_ERROR_MESSAGE, payload: err.message });
@@ -145,9 +152,10 @@ const CalendarWrapper: FunctionComponent = () => {
         setSelectedScooter(value);
     };
 
-    const scootersMock = [2]; // todo : remove
+    const scootersMock = [13, 14]; // todo : remove
+    // const availableScooters = formatAvailableScooters(availableScooters);
     const formattedEvents = formatEvents(state.events.data);
-    // const availableScooters = fors", availableScooters);
+
     const isLoading = state.events.isLoading;
     const isError = state.events.errorMessage;
 
