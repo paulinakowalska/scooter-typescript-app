@@ -136,7 +136,7 @@ const ScootersWrapper: React.FunctionComponent = () => {
     };
 
     const handleShowSelectScooters = () => {
-        setScooterParams(initialScooterState);
+        setScooterParams({ ...initialScooterState, status: '' });
 
         if (showInputToSelectScooters) {
             const fetchData = async (): Promise<void> => {
