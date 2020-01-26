@@ -7,5 +7,5 @@ export const scootersActions = {
     setErrorMessage: (errorMessage: string) => makeAction(ScootersActions.SET_ERROR_MESSAGE, errorMessage),
     updateScooter: (scooter: Scooter) => makeAction(ScootersActions.UPDATE_SCOOTER, scooter),
     addScooter: (scooter: Scooter) => makeAction(ScootersActions.ADD_SCOOTER, scooter),
-    deleteScooter: (scooterId: number) => makeAction(ScootersActions.DELETE_SCOOTER, scooterId),
+    deleteScooter: (scooterId: number | string) => makeAction(ScootersActions.DELETE_SCOOTER, scooterId), // empty string in initial state
 };

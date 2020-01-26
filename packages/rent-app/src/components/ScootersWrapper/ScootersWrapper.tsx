@@ -11,7 +11,7 @@ const ScootersWrapper: React.FunctionComponent = () => {
         id: '',
         name: '',
         model: '',
-        status: '',
+        status: 'available',
     };
     const [scooterParams, setScooterParams] = useState(initialScooterState);
 
@@ -21,7 +21,9 @@ const ScootersWrapper: React.FunctionComponent = () => {
     const [showInputToUpdateScooters, setShowInputToUpdateScooters] = useState(false);
 
     const handleInputChange = e => {
-        setScooterParams({ ...scooterParams, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+
+        setScooterParams({ ...scooterParams, [name]: value });
     };
 
     useEffect(() => {

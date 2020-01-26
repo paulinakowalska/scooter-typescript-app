@@ -6,7 +6,7 @@ interface SelectScooterProps {
     ScooterOptionsWrapper: StyledFunction;
     ScooterButton: StyledFunction;
     ScooterLabel: StyledFunction;
-    scooterParams: { id: number; name: string; status: string; model: string };
+    scooterParams: { id: number | string; name: string; status: string; model: string };
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleGetSelectedScooters: () => void;
 }
@@ -29,7 +29,6 @@ const SelectScooters: React.FunctionComponent<SelectScooterProps> = ({
             Name:
             <ScooterInput type="string" name="name" value={scooterParams.name} onChange={handleInputChange} />
         </ScooterLabel>
-
         <ScooterButton onClick={handleGetSelectedScooters}>Find</ScooterButton>
     </ScooterOptionsWrapper>
 );

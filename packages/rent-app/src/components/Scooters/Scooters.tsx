@@ -47,8 +47,8 @@ const ScooterLabel = styled.label`
 `;
 
 interface ScootersProps {
-    scootersList: Array<{ id: number; name: string; status: string; model: string }>;
-    scooterParams: { id: number; name: string; status: string; model: string };
+    scootersList: Array<{ id: number | string; name: string; status: string; model: string }>;
+    scooterParams: { id: number | string; name: string; status: string; model: string };
     showInputToSelectScooters: boolean;
     showInputToAddScooters: boolean;
     showInputToUpdateScooters: boolean;

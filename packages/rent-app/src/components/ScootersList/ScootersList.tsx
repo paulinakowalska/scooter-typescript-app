@@ -40,7 +40,7 @@ const LabelId = styled.div`
 `;
 
 interface ScootersListProps {
-    scootersList: Array<{ id: number; name: string; status: string; model: string }>;
+    scootersList: Array<{ id: number | string; name: string; status: string; model: string }>;
 }
 
 const ScootersList: React.FunctionComponent<ScootersListProps> = ({ scootersList }) => (

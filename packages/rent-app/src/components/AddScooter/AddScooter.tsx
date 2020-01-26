@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyledFunction } from 'styled-components';
+import ScooterStatusList from '../ScooterStatusList/ScooterStatusList';
 
 interface AddScooterProps {
     ScooterInput: StyledFunction;
     ScooterOptionsWrapper: StyledFunction;
     ScooterButton: StyledFunction;
     ScooterLabel: StyledFunction;
-    scooterParams: { id: number; name: string; status: string; model: string };
+    scooterParams: { id: number | string; name: string; status: string; model: string };
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleAddScooter: () => void;
 }
@@ -27,7 +28,7 @@ const AddScooter: React.FunctionComponent<AddScooterProps> = ({
         </ScooterLabel>
         <ScooterLabel>
             Status:
-            <ScooterInput type="text" name="status" value={scooterParams.status} onChange={handleInputChange} />
+            <ScooterStatusList value={scooterParams.status} handleInputChange={handleInputChange} />
         </ScooterLabel>
         <ScooterLabel>
             Model:

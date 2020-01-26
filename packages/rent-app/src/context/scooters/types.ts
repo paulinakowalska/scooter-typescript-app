@@ -7,7 +7,7 @@ export interface ScootersState {
 export type ScootersMap = { [key: string]: Scooter };
 
 export interface Scooter {
-    id: number;
+    id: number | string; // empty string in initial state
     name: string;
     model: string;
     status: string;
