@@ -12,10 +12,12 @@ export const getScooters = async (): Promise<ScootersMap> => {
 
 export const getScootersBy = async (params: object): Promise<ScootersMap> => {
     const urlParams = Object.keys(params)
+        .filter(p => params[p])
         .map(key => `${key}=${params[key]}`)
         .join('&');
 
     const scootersList = await axios.get<{}, AxiosResponse<Scooter[]>>(`${api}/scooter?${urlParams}`);
+
     return scootersList.data.reduce((map, scooter) => {
         map[scooter.id] = scooter;
         return map;

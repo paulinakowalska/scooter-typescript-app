@@ -48,8 +48,8 @@ const ScootersList: React.FunctionComponent<ScootersListProps> = ({ scootersList
         <Labels>
             <LabelId>ID</LabelId>
             <Label>NAME</Label>
-            <Label>MODEL</Label>
             <Label>STATUS</Label>
+            <Label>MODEL</Label>
         </Labels>
         {scootersList.map(scooter => (
             <Scooter key={scooter.id}>

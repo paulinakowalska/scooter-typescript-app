@@ -48,7 +48,7 @@ const ScootersWrapper: React.FunctionComponent = () => {
 
         const updateData = async () => {
             try {
-                const scooters = await getScootersBy(scooterParams); // selectedParamsToSelect usunac ze state bo dane te mam w inputach
+                const scooters = await getScootersBy(scooterParams);
                 dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
             } catch (err) {
                 console.log(err);

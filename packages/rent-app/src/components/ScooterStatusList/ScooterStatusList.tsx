@@ -12,7 +12,7 @@ interface ScooterStatusListProps {
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const scooterStatusList = ['available', 'not available', 'broken', 'repairing'];
+const scooterStatusList = ['available', 'notAvailable', 'broken', 'repairing'];
 
 const ScooterStatusList: React.FunctionComponent<ScooterStatusListProps> = ({ value, handleInputChange }) => (
     <SelectWrapper>

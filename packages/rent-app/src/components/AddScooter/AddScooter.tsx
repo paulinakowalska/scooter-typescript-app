@@ -24,7 +24,7 @@ const AddScooter: React.FunctionComponent<AddScooterProps> = ({
     <ScooterOptionsWrapper>
         <ScooterLabel>
             Name:
-            <ScooterInput type="text" name="name" value={scooterParams.name} onChange={handleInputChange} />
+            <ScooterInput type="string" name="name" value={scooterParams.name} onChange={handleInputChange} />
         </ScooterLabel>
         <ScooterLabel>
             Status:
@@ -32,7 +32,7 @@ const AddScooter: React.FunctionComponent<AddScooterProps> = ({
         </ScooterLabel>
         <ScooterLabel>
             Model:
-            <ScooterInput type="text" name="model" value={scooterParams.model} onChange={handleInputChange} />
+            <ScooterInput type="string" name="model" value={scooterParams.model} onChange={handleInputChange} />
         </ScooterLabel>
         <ScooterButton onClick={handleAddScooter}>Add</ScooterButton>
     </ScooterOptionsWrapper>
