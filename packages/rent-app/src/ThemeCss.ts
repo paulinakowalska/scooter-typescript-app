@@ -2,6 +2,7 @@ export const theme = {
     width: '1200px',
     colors: {
         white: '#fff',
+        lightBeige: '#faebd7',
         lightPink: '#ffdfdf',
         mediumPink: '#fbc1bc',
         mediumBlue: '#315b96',
