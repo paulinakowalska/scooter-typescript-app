@@ -57,8 +57,8 @@ const EditEventModal: React.FunctionComponent<ModalProps> = ({
                 const newEvent = {
                     id: selectedEvent.id,
                     name: selectedEvent.title,
-                    startDate: startDate.utc(),
-                    endDate: endDate.utc(),
+                    startDate: startDate,
+                    endDate: endDate,
                     userId: 15,
                     scooterId: selectedScooter,
                 };

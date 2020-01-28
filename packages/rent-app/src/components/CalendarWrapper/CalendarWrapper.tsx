@@ -8,13 +8,13 @@ import { addEvent, deleteEvent, getEvents } from '../../api/events';
 import { getAvailableScooters } from '../../api/scooters';
 import { ScootersActions } from '../../context/scooters';
 
-const formatEvents = (events: EventsMap): { id: number; title: string; start: Moment; end: Moment }[] => {
+const formatEvents = (events: EventsMap): { id: number; title: string; start: Date; end: Date }[] => {
     return Object.values(events).map(({ id, name, startDate, endDate }) => {
         return {
             id,
             title: name,
-            start: moment(startDate),
-            end: moment(endDate),
+            start: moment(startDate).toDate(),
+            end: moment(endDate).toDate(),
         };
     });
 };
@@ -129,8 +129,8 @@ const CalendarWrapper: FunctionComponent = () => {
             try {
                 const event = {
                     name: `${selectedScooter} - User Name`,
-                    startDate: startDate.utc().valueOf(),
-                    endDate: endDate.utc().valueOf(),
+                    startDate: startDate,
+                    endDate: endDate.add(86399, 'seconds'),
                     scooterId: selectedScooter,
                     userId: 15,
                 };
@@ -152,7 +152,7 @@ const CalendarWrapper: FunctionComponent = () => {
         setSelectedScooter(value);
     };
 
-    const scootersMock = [13, 14]; // todo : remove
+    const scootersMock = [26]; // todo : remove
     // const availableScooters = formatAvailableScooters(availableScooters);
     const formattedEvents = formatEvents(state.events.data);
 

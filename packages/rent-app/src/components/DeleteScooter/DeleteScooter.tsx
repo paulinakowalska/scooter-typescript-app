@@ -22,7 +22,7 @@ const DeleteScooter: React.FunctionComponent<DeleteScooterProps> = ({
 }) => (
     <ScooterOptionsWrapper>
         <ScooterLabel>
-            id:
+            Id:
             <ScooterInput type="number" name="id" value={scooterParams.id} onChange={handleInputChange} />
         </ScooterLabel>
         <ScooterButton onClick={handleDeleteScooter}>Delete</ScooterButton>
