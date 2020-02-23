@@ -23,8 +23,13 @@ const StyledLink = styled(NavLink).attrs({
 
 const navLinks = [
     {
-        label: 'Events',
+        label: 'Home',
         path: '/',
+        position: 'left',
+    },
+    {
+        label: 'Calendar',
+        path: '/events',
         position: 'left',
     },
     {
@@ -68,20 +73,18 @@ const Header = () => {
 
     return (
         <HeaderContainer>
-            <React.Fragment>
-                <Button color="primary" size="large" onClick={toggleDrawer}>
-                    <MenuIcon fontSize="large" />
-                </Button>
-                <Drawer anchor="right" open={open} onClose={toggleDrawer}>
-                    {navLinks.map(({ path, label }, i) => (
-                        <ListItem button key={i}>
-                            <StyledLink exact to={path} key={i}>
-                                {label}
-                            </StyledLink>
-                        </ListItem>
-                    ))}
-                </Drawer>
-            </React.Fragment>
+            <Button color="primary" size="large" onClick={toggleDrawer}>
+                <MenuIcon fontSize="large" />
+            </Button>
+            <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                {navLinks.map(({ path, label }, i) => (
+                    <ListItem button key={i}>
+                        <StyledLink exact to={path} key={i}>
+                            {label}
+                        </StyledLink>
+                    </ListItem>
+                ))}
+            </Drawer>
         </HeaderContainer>
     );
 };

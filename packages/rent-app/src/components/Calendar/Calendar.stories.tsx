@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { storiesOf } from '@storybook/react';
 import { momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { Calendar } from './Calendar';
+import Calendar from './Calendar';
 import { date, number, text } from '@storybook/addon-knobs';
 
 storiesOf('Calendar', module)

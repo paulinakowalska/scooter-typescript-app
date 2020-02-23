@@ -30,6 +30,7 @@ module.exports = {
         node: true,
         'jest/globals': true,
         browser: true,
+        es6: true,
     },
     plugins: ['jest', 'prettier', 'react'],
 };

@@ -128,4 +128,4 @@ const Calendar: FunctionComponent<CalendarProps> = ({
     );
 };
 
-export { Calendar };
+export default Calendar;
