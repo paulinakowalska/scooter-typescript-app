@@ -1,5 +1,3 @@
-import { Moment } from 'moment';
-
 export interface EventsState {
     isLoading: boolean;
     errorMessage: string;
@@ -11,8 +9,8 @@ export type EventsMap = { [key: string]: Event };
 export interface Event {
     id?: number;
     name: string;
-    startDate: Moment;
-    endDate: Moment;
+    startDate: Date;
+    endDate: Date;
     userId: number;
     scooterId: number;
 }

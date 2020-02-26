@@ -1,6 +1,5 @@
-import { Calendar } from '../Calendar/Calendar';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import { momentLocalizer } from 'react-big-calendar';
 import { useStore } from '../../context/ContextProvider';
 import { EventsActions, EventsMap } from '../../context/events';
@@ -8,13 +7,15 @@ import { addEvent, deleteEvent, getEvents } from '../../api/events';
 import { getAvailableScooters } from '../../api/scooters';
 import { ScootersActions } from '../../context/scooters';
 
+import Calendar from '../../components/Calendar/Calendar';
+
 const formatEvents = (events: EventsMap): { id: number; title: string; start: Date; end: Date }[] => {
     return Object.values(events).map(({ id, name, startDate, endDate }) => {
         return {
             id,
             title: name,
-            start: moment(startDate).toDate(),
-            end: moment(endDate).toDate(),
+            start: startDate,
+            end: endDate,
         };
     });
 };
@@ -24,13 +25,13 @@ const formatEvents = (events: EventsMap): { id: number; title: string; start: Da
 // };
 
 const CalendarWrapper: FunctionComponent = () => {
-    const defaultDate = moment();
+    const defaultDate = moment().toDate();
     const [openEventModal, setOpenEventModal] = useState(false);
     const [openEditEventModal, setOpenEditEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
     const [selectedScooter, setSelectedScooter] = useState();
-    const [startDate, setStartDate] = useState<moment.Moment>(defaultDate);
-    const [endDate, setEndDate] = useState(defaultDate);
+    const [startDate, setStartDate] = useState<Date>(defaultDate);
+    const [endDate, setEndDate] = useState<Date>(defaultDate);
     const { state, dispatch } = useStore();
 
     useEffect(() => {
@@ -50,13 +51,17 @@ const CalendarWrapper: FunctionComponent = () => {
 
     const handleSelectSlot = (slotInfo: { start: Date }) => {
         const { start } = slotInfo;
+
+        setStartDate(start);
+
+        const currentEndDate = new Date(new Date(start).setHours(23, 59, 59, 999));
+        setEndDate(currentEndDate);
+
         const fetchData = async (): Promise<void> => {
             try {
-                // todo : fix date problems ( it should by type: 2020-01-13T00:00:00.000Z )
-
                 const scooters = await getAvailableScooters({
-                    startDate,
-                    endDate,
+                    startDate: start,
+                    endDate: currentEndDate,
                 });
                 dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
             } catch (err) {
@@ -65,19 +70,17 @@ const CalendarWrapper: FunctionComponent = () => {
         };
         fetchData();
 
-        setStartDate(moment(start));
-        setEndDate(moment(start));
+        setStartDate(start);
+        setEndDate(currentEndDate);
         setOpenEventModal(true);
     };
 
     const handleSelectEvent = (event: { start: Date; end: Date }) => {
-        setStartDate(moment(event.start));
-        setEndDate(moment(event.end));
+        setStartDate(event.start);
+        setEndDate(event.end);
 
         const fetchData = async (): Promise<void> => {
             try {
-                // todo : fix date problems
-
                 const scooters = await getAvailableScooters({
                     startDate: event.start,
                     endDate: event.end,
@@ -114,14 +117,15 @@ const CalendarWrapper: FunctionComponent = () => {
     };
 
     const handleChangeStartDate = (date: Date) => {
-        setStartDate(moment(date).subtract(date.getTimezoneOffset(), 'minutes'));
+        setStartDate(date);
 
-        if (date > endDate.toDate()) {
-            setEndDate(moment(date).subtract(date.getTimezoneOffset(), 'minutes'));
+        if (date > endDate) {
+            setEndDate(date);
         }
     };
     const handleChangeEndDate = (date: Date) => {
-        setEndDate(moment(date).subtract(date.getTimezoneOffset(), 'minutes'));
+        const currentEndDate = new Date(new Date(date).setHours(23, 59, 59, 999));
+        setEndDate(currentEndDate);
     };
 
     const handleAddEvent = () => {
@@ -130,9 +134,9 @@ const CalendarWrapper: FunctionComponent = () => {
                 const event = {
                     name: `${selectedScooter} - User Name`,
                     startDate: startDate,
-                    endDate: endDate.add(86399, 'seconds'),
+                    endDate: endDate,
                     scooterId: selectedScooter,
-                    userId: 15,
+                    userId: 17,
                 };
 
                 await addEvent(event);
@@ -152,7 +156,7 @@ const CalendarWrapper: FunctionComponent = () => {
         setSelectedScooter(value);
     };
 
-    const scootersMock = [26]; // todo : remove
+    const scootersMock = [27]; // todo : remove
     // const availableScooters = formatAvailableScooters(availableScooters);
     const formattedEvents = formatEvents(state.events.data);
 
@@ -186,4 +190,4 @@ const CalendarWrapper: FunctionComponent = () => {
     );
 };
 
-export { CalendarWrapper };
+export default CalendarWrapper;

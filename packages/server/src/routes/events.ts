@@ -31,6 +31,7 @@ const postEventsHandler = async (req: Request, res: Response) => {
 
         res.json({ status: 'OK' });
     } catch (err) {
+        console.log('ERROR: ', err);
         res.json(err);
     }
 };

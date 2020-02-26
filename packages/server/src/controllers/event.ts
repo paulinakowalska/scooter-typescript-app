@@ -2,7 +2,6 @@ import { NewDataBase } from '../database/database';
 import { Event } from '../models/eventModel';
 import UserController from '../controllers/users';
 import ScooterController from '../controllers/scooter';
-import moment from 'moment';
 
 type EventFilterParams = {
     eventId?: string;
@@ -29,8 +28,8 @@ class EventController {
         const events = await eventRepository.find({ relations: ['scooter', 'user'] });
         return events.map((event: Event) => ({
             ...event,
-            startDate: moment(event.startDate),
-            endDate: moment(event.endDate),
+            startDate: event.startDate,
+            endDate: event.endDate,
         }));
     }
 
@@ -51,14 +50,14 @@ class EventController {
         const [scooter] = await new ScooterController().getScootersBy({ id: options.scooterId });
 
         if (!scooter) {
-            // if (!user || !scooter) {
+            // if (!user || !scooter) { // todo
             throw new Error('User or scooter is not defined');
         }
 
         const event = new Event();
         event.name = options.name;
-        event.startDate = moment(options.startDate).toDate();
-        event.endDate = moment(options.endDate).toDate();
+        event.startDate = options.startDate;
+        event.endDate = options.endDate;
         event.user = user;
         event.scooter = scooter;
 
@@ -74,8 +73,8 @@ class EventController {
         const event = new Event();
 
         event.name = options.name;
-        event.startDate = moment(options.startDate).toDate();
-        event.endDate = moment(options.endDate).toDate();
+        event.startDate = options.startDate;
+        event.endDate = options.endDate;
         event.user = user;
         event.scooter = scooter;
 

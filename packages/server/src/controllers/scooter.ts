@@ -49,15 +49,14 @@ class ScooterController {
     async getAvailableScooters(params: ScootersFilterParams) {
         try {
             const { id, name, model, status, startDate: eventStartDate, endDate: eventEndDate } = params;
-
-            const sDate = new Date(eventStartDate).toISOString();
-            const eDate = new Date(eventEndDate).toISOString();
+            const sd = eventStartDate;
+            const ed = eventEndDate;
 
             const connection = await NewDataBase.Get();
             const eventRepository = connection.getRepository(Event);
             const eventsFilteredByDate = await eventRepository.find({
                 relations: ['scooter', 'user'],
-                where: [{ startDate: LessThanOrEqual(sDate), endDate: MoreThanOrEqual(eDate) }],
+                where: [{ startDate: LessThanOrEqual(sd), endDate: MoreThanOrEqual(ed) }],
             });
 
             const eventIdsFilteredByDate = eventsFilteredByDate.map(event => event.scooter && event.scooter.id);
