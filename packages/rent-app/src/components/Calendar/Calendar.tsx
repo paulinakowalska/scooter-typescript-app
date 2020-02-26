@@ -28,7 +28,7 @@ const ErrorMessage = styled.div`
 
 interface CalendarProps {
     /** default new Date.now() */
-    defaultDate?: Moment;
+    defaultDate?: Date;
     localizer?: object;
     isLoading: boolean;
     isError: string;
@@ -92,7 +92,7 @@ const Calendar: FunctionComponent<CalendarProps> = ({
                 events={eventsList}
                 startAccessor="start"
                 endAccessor="end"
-                defaultDate={defaultDate.toDate()}
+                defaultDate={defaultDate}
                 localizer={localizer}
                 selectable
                 onSelectSlot={handleSelectSlot}

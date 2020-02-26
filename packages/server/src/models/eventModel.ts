@@ -13,10 +13,10 @@ export class Event extends BaseEntity {
     name: string;
 
     @Column({ type: 'timestamp', toUTC: false } as any)
-    startDate: Date;
+    startDate: number;
 
     @Column({ type: 'timestamp', toUTC: false } as any)
-    endDate: Date;
+    endDate: number;
 
     @ManyToOne(() => User, user => user.event, { onDelete: 'CASCADE', cascade: ['remove'] })
     @JoinColumn()
