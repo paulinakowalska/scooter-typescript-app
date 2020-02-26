@@ -32,7 +32,7 @@ storiesOf('Calendar', module)
                 },
             ];
 
-            return <Calendar events={eventsList} defaultDate={moment()} localizer={momentLocalizer(moment)} />;
+            return <Calendar events={eventsList} defaultDate={new Date()} localizer={momentLocalizer(moment)} />;
         },
         { info: { inline: true } },
     )
@@ -61,7 +61,7 @@ storiesOf('Calendar', module)
 
         return (
             <Fragment>
-                <Calendar events={eventsList} defaultDate={moment()} localizer={momentLocalizer(moment)} />
+                <Calendar events={eventsList} defaultDate={new Date()} localizer={momentLocalizer(moment)} />
             </Fragment>
         );
     });
