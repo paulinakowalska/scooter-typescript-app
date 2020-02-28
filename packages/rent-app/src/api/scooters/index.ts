@@ -25,7 +25,7 @@ export const getScootersBy = async (params: object): Promise<ScootersMap> => {
 };
 
 export const getAvailableScooters = async (params: { startDate; endDate }): Promise<ScootersMap> => {
-    const urlParams = `startDate=${params.startDate}&formattedEndDate=${params.endDate}`;
+    const urlParams = `startDate=${params.startDate}&endDate=${params.endDate}`;
 
     const scootersList = await axios.get<{}, AxiosResponse<Scooter[]>>(`${api}/scooter/available?${urlParams}`);
     return scootersList.data.reduce((map, scooter) => {

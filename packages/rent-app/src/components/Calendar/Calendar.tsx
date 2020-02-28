@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import { Calendar as BigCalendar } from 'react-big-calendar';
-import { Moment } from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
 import EventModal from '../EventModal/EventModal';
@@ -46,8 +45,8 @@ interface CalendarProps {
     openEditEventModal: boolean;
     selectedEvent: object;
     selectedScooter: number;
-    startDate: Moment;
-    endDate: Moment;
+    startDate: Date;
+    endDate: Date;
     handleChangeSelection: (event: React.ChangeEvent<{ name?: string; value: number }>) => void;
 }
 

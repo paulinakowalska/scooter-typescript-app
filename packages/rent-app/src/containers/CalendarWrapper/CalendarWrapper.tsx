@@ -19,10 +19,33 @@ const formatEvents = (events: EventsMap): { id: number; title: string; start: Da
         };
     });
 };
-// const formatScooters = (events: object, startDate: Moment, endDate: Moment) => {
-//     const scooterIds = Object.values(events);
-//     return scooterIds.filter((v, i) => scooterIds.indexOf(v) === i);
-// };
+
+const formatDate = date => {
+    // 2020-02-14T23:59:59.999Z
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    if (month < 10) {
+        month = '0' + month;
+    }
+    let day = date.getDate();
+    if (day < 10) {
+        day = '0' + day;
+    }
+    let hours = date.getHours();
+    if (hours < 10) {
+        hours = '0' + hours;
+    }
+    let minutes = date.getMinutes();
+    if (minutes < 10) {
+        minutes = '0' + minutes;
+    }
+    let seconds = date.getSeconds();
+    if (seconds < 10) {
+        seconds = '0' + seconds;
+    }
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+};
 
 const CalendarWrapper: FunctionComponent = () => {
     const defaultDate = moment().toDate();
@@ -57,11 +80,14 @@ const CalendarWrapper: FunctionComponent = () => {
         const currentEndDate = new Date(new Date(start).setHours(23, 59, 59, 999));
         setEndDate(currentEndDate);
 
+        const formattedStartDate = formatDate(start);
+        const formattedEndDate = formatDate(currentEndDate);
+
         const fetchData = async (): Promise<void> => {
             try {
                 const scooters = await getAvailableScooters({
-                    startDate: start,
-                    endDate: currentEndDate,
+                    startDate: formattedStartDate,
+                    endDate: formattedEndDate,
                 });
                 dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
             } catch (err) {
@@ -78,7 +104,6 @@ const CalendarWrapper: FunctionComponent = () => {
     const handleSelectEvent = (event: { start: Date; end: Date }) => {
         setStartDate(event.start);
         setEndDate(event.end);
-
         const fetchData = async (): Promise<void> => {
             try {
                 const scooters = await getAvailableScooters({
@@ -119,13 +144,39 @@ const CalendarWrapper: FunctionComponent = () => {
     const handleChangeStartDate = (date: Date) => {
         setStartDate(date);
 
+        let currentEndDate = endDate;
         if (date > endDate) {
+            currentEndDate = date;
             setEndDate(date);
         }
+        const fetchData = async (): Promise<void> => {
+            try {
+                const scooters = await getAvailableScooters({
+                    startDate: formatDate(date),
+                    endDate: formatDate(currentEndDate),
+                });
+                dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
+            } catch (err) {
+                dispatch({ type: ScootersActions.SET_ERROR_MESSAGE, payload: err.message });
+            }
+        };
+        fetchData();
     };
     const handleChangeEndDate = (date: Date) => {
         const currentEndDate = new Date(new Date(date).setHours(23, 59, 59, 999));
         setEndDate(currentEndDate);
+        const fetchData = async (): Promise<void> => {
+            try {
+                const scooters = await getAvailableScooters({
+                    startDate: formatDate(startDate),
+                    endDate: formatDate(currentEndDate),
+                });
+                dispatch({ type: ScootersActions.SET_SCOOTERS, payload: { scooters } });
+            } catch (err) {
+                dispatch({ type: ScootersActions.SET_ERROR_MESSAGE, payload: err.message });
+            }
+        };
+        fetchData();
     };
 
     const handleAddEvent = () => {
@@ -156,8 +207,7 @@ const CalendarWrapper: FunctionComponent = () => {
         setSelectedScooter(value);
     };
 
-    const scootersMock = [27]; // todo : remove
-    // const availableScooters = formatAvailableScooters(availableScooters);
+    const availableScooters = Object.keys(state.scooters.data);
     const formattedEvents = formatEvents(state.events.data);
 
     const isLoading = state.events.isLoading;
@@ -178,7 +228,7 @@ const CalendarWrapper: FunctionComponent = () => {
             handleChangeStartDate={handleChangeStartDate}
             handleChangeEndDate={handleChangeEndDate}
             handleAddEvent={handleAddEvent}
-            scootersList={scootersMock}
+            scootersList={availableScooters}
             eventsList={formattedEvents}
             openEditEventModal={openEditEventModal}
             selectedEvent={selectedEvent}

@@ -1,7 +1,7 @@
 import { NewDataBase } from '../database/database';
 import { Scooter } from '../models/scooterModel';
 import { Event } from '../models/eventModel';
-import { Any, MoreThanOrEqual, LessThanOrEqual, Not } from 'typeorm';
+import { Any, MoreThanOrEqual, LessThanOrEqual, Not, Between } from 'typeorm';
 
 type ScootersFilterParams = {
     id?: number;
@@ -48,21 +48,22 @@ class ScooterController {
 
     async getAvailableScooters(params: ScootersFilterParams) {
         try {
-            const { id, name, model, status, startDate: eventStartDate, endDate: eventEndDate } = params;
-            const sd = eventStartDate;
-            const ed = eventEndDate;
+            const { startDate: sd, endDate: ed } = params;
 
             const connection = await NewDataBase.Get();
             const eventRepository = connection.getRepository(Event);
             const eventsFilteredByDate = await eventRepository.find({
                 relations: ['scooter', 'user'],
-                where: [{ startDate: LessThanOrEqual(sd), endDate: MoreThanOrEqual(ed) }],
+                where: [
+                    { startDate: LessThanOrEqual(sd), endDate: MoreThanOrEqual(ed) },
+                    { startDate: MoreThanOrEqual(sd), endDate: LessThanOrEqual(ed) },
+                    { startDate: Between(sd, ed), endDate: MoreThanOrEqual(ed) },
+                    { startDate: LessThanOrEqual(sd), endDate: Between(sd, ed) },
+                ],
             });
 
             const eventIdsFilteredByDate = eventsFilteredByDate.map(event => event.scooter && event.scooter.id);
-            return await connection
-                .getRepository(Scooter)
-                .find({ where: [{ id }, { name }, { model }, { status }, { id: Not(Any(eventIdsFilteredByDate)) }] });
+            return await connection.getRepository(Scooter).find({ where: [{ id: Not(Any(eventIdsFilteredByDate)) }] });
         } catch (err) {
             console.log(err);
         }
