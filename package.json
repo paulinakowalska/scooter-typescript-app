@@ -100,7 +100,7 @@
     "material-table": "^1.57.2",
     "passport": "^0.4.1",
     "passport-okta-oauth": "0.0.1",
-    "passport-saml": "^1.2.0",
+    "passport-saml": "^3.2.2",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0"
   }
